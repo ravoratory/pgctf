@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=pg
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./db:/var/lib/postgresql/data
+
+  web:
+    build: ./app
+    volumes:
+      - ./app:/code
+    ports:
+      - '8080:8080'
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+    command: >
+      /bin/sh -c
+        'echo "Waiting for postgres..." &&
+        while ! nc -z db 5432; do sleep 1; done &&
+        echo "PostgreSQL started" &&
+
+        python manage.py makemigrations users &&
+        python manage.py makemigrations &&
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8080'
