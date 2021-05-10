@@ -1,0 +1,12 @@
+setup:
+  addons:
+    - plans: heroku-postgresql
+      as: DATABASE
+build:
+  docker:
+    web: app/Dockerfile
+release:
+  image: web
+  command: python manage.py migrate
+run:
+  web: uwsgi --ini /code/config/uwsgi.ini -w config.wsgi
