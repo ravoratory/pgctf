@@ -10,4 +10,4 @@ release:
   command: 
     - python manage.py migrate
 run:
-  web: uwsgi --ini /code/config/uwsgi.ini -w config.wsgi
+  web: uwsgi --ini /code/app/uwsgi.ini -w config.wsgi
