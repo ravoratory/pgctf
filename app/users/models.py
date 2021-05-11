@@ -52,6 +52,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         }
     )
 
+    objects = UserManager()
+
     email = models.EmailField('Emailアドレス', blank=True)
 
     date_joined = models.DateTimeField('アカウント作成日', default=timezone.now)
