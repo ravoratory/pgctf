@@ -8,7 +8,7 @@ build:
 release:
   image: web
   command:
-    - python manage.py collectstatic
+    - python manage.py collectstatic --noinput
     - python manage.py migrate
 run:
   web: uwsgi --ini /code/app/uwsgi.ini -w app.wsgi
