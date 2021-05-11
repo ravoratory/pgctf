@@ -10,6 +10,7 @@ release:
   command:
     - python manage.py migrate
 run:
+  image: web
   command:
     - python manage.py collectstatic --noinput
     - uwsgi --ini /code/app/uwsgi.ini -w app.wsgi
