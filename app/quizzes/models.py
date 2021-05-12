@@ -22,6 +22,7 @@ class QuizCategory(models.Model):
 
 
 class QuizFile(models.Model):
+    title = models.CharField(max_length=20, blank=True, null=True)
     file = models.FileField(upload_to='quiz_files/')
     uploaded_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
@@ -38,7 +39,7 @@ class Quiz(models.Model):
     statement = models.TextField('Quiz Statement', blank=True, null=True)
     category = models.ManyToManyField(QuizCategory, related_name='quiz')
 
-    file = models.ManyToManyField(QuizFile, related_name='quiz')
+    file = models.ManyToManyField(QuizFile, related_name='quiz', null=True, blank=True)
 
     flag = models.CharField(
         'Flag',
