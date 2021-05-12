@@ -58,6 +58,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     date_joined = models.DateTimeField('アカウント作成日', default=timezone.now)
 
+    date_started = models.DateTimeField('CTF開始時間', blank=True, null=True)
+
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email',]
