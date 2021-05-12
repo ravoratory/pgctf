@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     #Local
     'users.apps.UsersConfig',
+    'quizzes.apps.QuizzesConfig',
 
     #Django
     'django.contrib.admin',

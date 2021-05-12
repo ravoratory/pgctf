@@ -12,10 +12,13 @@ class FlagValidator(RegexValidator):
 
 
 class QuizCategory(models.Model):
-    category_name = models.CharField('quiz', unique=True)
+    category_name = models.CharField('quiz', max_length=30, unique=True)
 
     def __str__(self):
         return self.category_name
+
+    class Meta:
+        verbose_name_plural = 'Quiz categories'
 
 
 class QuizFile(models.Model):
@@ -29,9 +32,9 @@ class QuizFile(models.Model):
 
 
 class Quiz(models.Model):
-    quiz_number = models.CharField('Quiz number', unique=True)
+    quiz_number = models.CharField('Quiz number', max_length=100, unique=True)
 
-    title = models.CharField('Quiz Title', unique=True)
+    title = models.CharField('Quiz Title', max_length=100, unique=True)
     statement = models.TextField('Quiz Statement', blank=True, null=True)
     category = models.ManyToManyField(QuizCategory, related_name='quiz')
 
@@ -39,6 +42,7 @@ class Quiz(models.Model):
 
     flag = models.CharField(
         'Flag',
+        max_length=100,
         validators=[FlagValidator()],
         unique=True,
     )
@@ -47,7 +51,7 @@ class Quiz(models.Model):
     point = models.IntegerField('Point')
 
     solved_users = models.ManyToManyField(
-        'Solved user',
+        'users.User',
         related_name='solved_quiz',
         through='Solved',
     )
@@ -60,10 +64,17 @@ class Quiz(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name_plural = 'Quizzes'
+
 
 class Solved(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE)
 
     solved_datetime = models.DateTimeField('Solved date', default=timezone.now)
     elapsed_time = models.TimeField('Elapsed time')
+
+    class Meta:
+        verbose_name = 'Solved user'
+        verbose_name_plural = 'Solved users'
