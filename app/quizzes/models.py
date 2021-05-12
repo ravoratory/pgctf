@@ -31,6 +31,9 @@ class QuizFile(models.Model):
     def filename(self):
         return os.path.basename(self.file.name)
 
+    def __str__(self):
+        return self.title
+
 
 class Quiz(models.Model):
     quiz_number = models.CharField('Quiz number', max_length=100, unique=True)
