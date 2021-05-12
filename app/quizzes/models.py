@@ -39,7 +39,7 @@ class Quiz(models.Model):
     statement = models.TextField('Quiz Statement', blank=True, null=True)
     category = models.ManyToManyField(QuizCategory, related_name='quiz')
 
-    file = models.ManyToManyField(QuizFile, related_name='quiz', null=True)
+    file = models.ManyToManyField(QuizFile, related_name='quiz', null=True, blank=True)
 
     flag = models.CharField(
         'Flag',

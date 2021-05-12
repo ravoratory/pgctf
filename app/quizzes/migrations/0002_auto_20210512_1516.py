@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='quiz',
             name='file',
-            field=models.ManyToManyField(null=True, related_name='quiz', to='quizzes.QuizFile'),
+            field=models.ManyToManyField(null=True, blank=True, related_name='quiz', to='quizzes.QuizFile'),
         ),
     ]
