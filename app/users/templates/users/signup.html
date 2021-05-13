@@ -2,10 +2,11 @@
 {% load static %}
 
 {% block title %}
-Signup
+Sign up
 {% endblock %}
 
 {% block content %}
+    {% include "header.html" %}
     <h2>Sign up</h2>
     <form method="post">
         {% csrf_token %}

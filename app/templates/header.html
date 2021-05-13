@@ -1,0 +1,24 @@
+{% load static %}
+{% load sass_tags %}
+<link rel="stylesheet" href="{% sass_src 'css/header.scss' %}" type="text/css">
+<nav class="navbar">
+    <div class="container">
+        <div class="home-button">PG-CTF</div>
+        <div class="navbar-content">
+            <ul class="navbar-menu">
+                <li>Home</li>
+                <li>Problems</li>
+                <li>Ranking</li>
+            </ul>
+            <ul class="navbar-menu">
+            {% if user.authenticated %}
+                <li>Sign out</li>
+                <li>@{{ user }}</li>
+            {% else %}
+                <li><a href="{% url 'users:signup' %}">Sign up</a></li>
+                <li><a href="{% url 'users:signin' %}">Sign in</a></li>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
