@@ -12,7 +12,7 @@ class FlagValidator(RegexValidator):
 
 
 class QuizCategory(models.Model):
-    category_name = models.CharField('quiz', max_length=30, unique=True)
+    category_name = models.CharField('Category', max_length=30, unique=True)
 
     def __str__(self):
         return self.category_name
@@ -66,7 +66,7 @@ class Quiz(models.Model):
     updated_at = models.DateTimeField('Updated at', default=timezone.now)
 
     def __str__(self):
-        return self.title
+        return f'{self.quiz_number}: {self.title}'
 
     class Meta:
         verbose_name_plural = 'Quizzes'
