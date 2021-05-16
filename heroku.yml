@@ -8,6 +8,6 @@ build:
 release:
   image: web
   command:
-    - ./prod-release.sh
+    - python manage.py migrate
 run:
-  web: uwsgi --ini /code/app/uwsgi.ini -w app.wsgi
+  web: ./prod-run.sh
