@@ -8,6 +8,6 @@ build:
 release:
   image: web
   command:
-    - ./prod-relase.sh
+    - ./prod-release.sh
 run:
   web: uwsgi --ini /code/app/uwsgi.ini -w app.wsgi
