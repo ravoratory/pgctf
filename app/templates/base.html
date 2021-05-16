@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load sass_tags %}
 
 <html lang="{{ LANGUAGE_CODE|default:'ja' }}">
     <head>
@@ -8,8 +9,10 @@
         <meta name="description" content="PG CTF">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="{% static 'css/normalize.css' %}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="{% sass_src 'css/header.scss' %}" type="text/css">
     </head>
     <body>
+        {% include "header.html" %}
         {% block content %}
         {% endblock %}
     </body>
