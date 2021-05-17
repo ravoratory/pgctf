@@ -1,5 +1,6 @@
 $header_back_color: black;
 $header_text_color: white;
+$header_menu_color: #bbb;
 
 .navbar {
     background-color: $header_back_color;
@@ -36,7 +37,7 @@ $header_text_color: white;
 
             li {
                 display: list-item;
-                color: $header_text_color;
+                color: $header_menu_color;
                 margin: 0 .5rem;
 
                 a, a:visited {
@@ -44,8 +45,13 @@ $header_text_color: white;
                     text-decoration: none;
                 }
                 a:hover {
+                    color: $header_text_color;
                     text-decoration: underline;
                 }
+            }
+
+            .user-info {
+                color: $header_text_color;
             }
         }
     }

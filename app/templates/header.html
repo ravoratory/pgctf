@@ -3,14 +3,14 @@
         <div class="home-button">PG-CTF</div>
         <div class="navbar-content">
             <ul class="navbar-menu">
-                <li>Home</li>
-                <li>Problems</li>
+                <li><a href="{% url 'sites:home' %}">Home</a></li>
+                <li><a href="{% url 'sites:home' %}">Problems</a></li>
                 <li>Ranking</li>
             </ul>
             <ul class="navbar-menu">
-            {% if user.authenticated %}
-                <li>Sign out</li>
-                <li>@{{ user }}</li>
+            {% if user.is_authenticated %}
+                <li><a href="/account/signout/">Sign out</a></li>
+                <li class="user-info">{{ user.points | default:"0" }} pts @{{ user }}</li>
             {% else %}
                 <li><a href="{% url 'users:signup' %}">Sign up</a></li>
                 <li><a href="{% url 'users:signin' %}">Sign in</a></li>

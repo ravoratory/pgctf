@@ -11,13 +11,13 @@ from .models import User
 
 class SignUpView(CreateView):
     form_class = UserCreationForm
-    template_name = "users/signup.html" 
-    success_url = reverse_lazy('users:signin')
+    template_name = "users/signup.html"
+    success_url = reverse_lazy('sites:home')
 
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        self.object = user 
+        self.object = user
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -29,8 +29,8 @@ class SignInView(generic.View):
         username = form.cleaned_data.get('username')
         user = User.objects.get(username=username)
         login(request, user)
-        return redirect('/')
+        return redirect('/home/')
 
     def get(self, request, *args, **kwargs):
         form = AuthenticationForm(request.POST)
-        return render(request, 'users/signin.html', {'form': form})
+        return render(request, 'users/signin.html', {'form': form, 'user': request.user})
