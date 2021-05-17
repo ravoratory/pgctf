@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="{% sass_src 'css/header.scss' %}" type="text/css">
     </head>
     <body>
-        {% include "header.html" %}
+        {% include "header.html" with user=user %}
         {% block content %}
         {% endblock %}
     </body>

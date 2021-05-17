@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     #Local
+    'sites.apps.SitesConfig',
     'users.apps.UsersConfig',
     'quizzes.apps.QuizzesConfig',
 
@@ -149,3 +150,9 @@ SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^.+\.(sass|scss)$'
 SASS_PRECISION = 8
 SASS_OUTPUT_STYLE = 'compressed'
 SASS_TEMPLATE_EXTS = ['.html', '.haml']
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+LOGIN_URL = '/account/signin/'
+LOGIN_REDIRECT_URL = '/home/'
+LOGOUT_REDIRECT_URL='/account/signin/'

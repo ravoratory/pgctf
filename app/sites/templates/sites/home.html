@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load sass_tags %}
+
+{% block title %}PG-CTF Main page{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'sites/home.scss' %}">
+
+<main>
+    <div class="lp">
+        <h1>PG-CTF</h1>
+        <p>うぇるかむかもーん!</p>
+        <p>各問題から<span>pgctf{123_abc}</span>という形式のflagを見つけてください</p>
+        <p>指定された場所以外への攻撃はしないでください</p>
+    </div>
+
+    <div class="content">
+        <p>Problems</p>
+        <table class="problems">
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Difficulty</th>
+                <th>Points</th>
+                <th>Solved</th>
+            </tr>
+            {% for quiz in quizzes %}
+            <tr>
+                <td>{{ quiz.quiz_number }}</td>
+                <td>{{ quiz.title }}</td>
+                <td>{{ quiz.category | default:" " }}</td>
+                <td>{{ quiz.difficulty }}</td>
+                <td>{{ quiz.point }}</td>
+                <td>
+                    {% if quiz.is_solved %}OK{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</main>
+{% endblock %}

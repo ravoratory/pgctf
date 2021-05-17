@@ -40,9 +40,15 @@ class Quiz(models.Model):
 
     title = models.CharField('Quiz Title', max_length=100, unique=True)
     statement = models.TextField('Quiz Statement', blank=True, null=True)
-    category = models.ManyToManyField(QuizCategory, related_name='quiz')
+    category = models.ForeignKey(
+        QuizCategory,
+        related_name='quiz',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
 
-    file = models.ManyToManyField(QuizFile, related_name='quiz', null=True, blank=True)
+    file = models.ManyToManyField(QuizFile, related_name='quiz', blank=True)
 
     flag = models.CharField(
         'Flag',
