@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load sass_tags %}
+
+{% block title %}PG-CTF Main page{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'quizzes/quiz.scss' %}">
+
+<main>
+    <div class="quiz-title">
+        <h1>{{quiz.quiz_number}} [{{ quiz.category }}] {{ quiz.title }}</h1>
+        <p>Difficulty: {{ quiz.difficulty }}, Point: {{ quiz.point }}</p>
+    </div>
+    <div class="statement">
+        <p>{{ quiz.statement }}</p>
+    </div>
+    <div class="status">
+        {% if quiz.status == 1 %}
+        <p>Solved!</p>
+        {% elif quiz.status == 2 %}
+        <p>Invalid Flag...</p>
+        {% endif %}
+    </div>
+    <div class="flag-form">
+        <form method="POST" action="{% url 'quizzes:quiz' quiz.quiz_number %}">
+            {% csrf_token %}
+            {{ form.flag }}
+            <button>Submit</button>
+        </form>
+    </div>
+</main>
+{% endblock %}

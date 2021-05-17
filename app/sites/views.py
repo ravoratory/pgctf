@@ -17,7 +17,7 @@ class LandingPage(LoginRequiredMixin ,generic.View):
         quizzes = (Quiz.objects
             .select_related('category')
             .filter(published=True)
-            .order_by('created_at')
+            .order_by('quiz_number')
             .annotate(is_solved=Count('solved_users', filter=Q(solved__user=request.user)))
         )
 

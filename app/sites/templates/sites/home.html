@@ -28,7 +28,7 @@
             {% for quiz in quizzes %}
             <tr>
                 <td>{{ quiz.quiz_number }}</td>
-                <td>{{ quiz.title }}</td>
+                <td><a href="{% url 'quizzes:quiz' quiz.quiz_number %}">{{ quiz.title }}</a></td>
                 <td>{{ quiz.category | default:" " }}</td>
                 <td>{{ quiz.difficulty }}</td>
                 <td>{{ quiz.point }}</td>
