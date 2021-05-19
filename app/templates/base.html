@@ -4,10 +4,12 @@
 
 <html lang="{{ LANGUAGE_CODE|default:'ja' }}">
     <head>
+        <meta charset="utf-8">
         <title>{% block title %}PG CTF{% endblock %}</title>
-        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
         <meta name="description" content="PG CTF">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="disVill">
         <link href="{% static 'css/normalize.css' %}" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="{% sass_src 'css/header.scss' %}" type="text/css">
     </head>

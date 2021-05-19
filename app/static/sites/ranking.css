@@ -1,0 +1,3 @@
+main{max-width:1000px;display:flexbox;justify-content:center;margin:0 auto}main h1{text-align:center}main table{margin:1rem auto;border-collapse:collapse;width:90%}main table tr:first-child{border-bottom:1px solid black}main table tr{border-bottom:1px solid #ddd}main table tr:nth-child(n+2):hover{background-color:#eee}main table .is_user{background-color:#eee}main table th,main table td{text-align:left;padding:.5rem;width:6%}main table th:nth-child(2){width:42%}main table th:nth-child(4){width:18%}main div p{text-align:center}
+
+/*# sourceMappingURL=ranking.css.map */

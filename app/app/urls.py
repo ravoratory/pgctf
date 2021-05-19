@@ -16,13 +16,19 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth import views as auth_view
 from django.urls import path, include
+
+from users import views
+
 
 urlpatterns = [
     path('', include('sites.urls', namespace='sites')),
     path('admin/', admin.site.urls),
-    path('account/', include('users.urls', namespace='users')),
     path('problems/', include('quizzes.urls', namespace='quizzes')),
+    path('signup/', views.SignUpView.as_view(), name='signup'),
+    path('signin/', views.SignInView.as_view(), name='signin'),
+    path('signout/', auth_view.LogoutView.as_view(), name='signout'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

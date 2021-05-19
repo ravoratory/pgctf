@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load sass_tags %}
+
+{% block title %}PG-CTF Ranking page{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'sites/ranking.scss' %}">
+
+<main>
+    <div class="page-title">
+        <h1>Ranking</h1>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Points</th>
+                <th>Registration date</th>
+            </tr>
+            {% for rank in ranking %}
+            {% if user.username == rank.username %}
+                <tr class="is_user">
+            {% else %}
+                <tr>
+            {% endif %}
+                <td>{{ forloop.counter }}</td>
+                <td>{{ rank.username }}</td>
+                <td>{{ rank.points | default:0 }}</td>
+                <td>{{ rank.date_joined | date:"Y-m-d H:i:s"}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div>
+        <p>点数が同じ場合は登録日が新しい順になります</p>
+    </div>
+</main>
+{% endblock %}
