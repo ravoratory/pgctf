@@ -31,7 +31,7 @@ class SignInView(generic.View):
         username = form.cleaned_data.get('username')
         user = User.objects.get(username=username)
         login(request, user)
-        return redirect('/home/')
+        return redirect('/')
 
     def get(self, request, *args, **kwargs):
         user = request.user
