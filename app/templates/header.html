@@ -7,11 +7,11 @@
             <ul class="navbar-menu">
                 <li><a href="{% url 'sites:home' %}">Home</a></li>
                 <li><a href="{% url 'sites:home' %}">Problems</a></li>
-                <li>Ranking</li>
+                <li><a href="{% url 'sites:ranking' %}">Ranking</a></li>
             </ul>
             <ul class="navbar-menu">
             {% if user.is_authenticated %}
-                <li><a href="/account/signout/">Sign out</a></li>
+                <li><a href="{% url 'users:signout' %}">Sign out</a></li>
                 <li class="user-info">{{ user.points | default:"0" }} pts @{{ user }}</li>
             {% else %}
                 <li><a href="{% url 'users:signup' %}">Sign up</a></li>

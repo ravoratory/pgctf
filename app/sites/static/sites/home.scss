@@ -40,16 +40,12 @@ main {
             th, td{
                 text-align: left;
                 padding: .5rem;
+                width: 5%;
             }
 
             th:nth-child(2) {
                 width: 50%;
             }
-            th:nth-child(n+3),
-            th:nth-child(1) {
-                width: 5%;
-            }
-
         }
     }
 }
