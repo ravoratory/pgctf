@@ -83,7 +83,9 @@ class Solved(models.Model):
     quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE)
 
     solved_datetime = models.DateTimeField('Solved date', default=timezone.now)
-    elapsed_time = models.TimeField('Elapsed time')
+
+    def __str__(self):
+        return f'{self.quiz.quiz_number}: {self.user.username} [{self.solved_datetime}]'
 
     class Meta:
         verbose_name = 'Solved user'
