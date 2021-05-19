@@ -1,0 +1,50 @@
+main {
+    max-width: 1000px;
+    margin-right: auto;
+    margin-left: auto;
+
+    .statement {
+        background-color: #eee;
+        border-radius: .5rem;
+        padding: .1em 2rem;
+        margin: 1rem 0;
+
+        .quiz_files {
+            text-decoration: none;
+        }
+    }
+
+    .status {
+        border-radius: .5rem;
+        margin: 1rem 0;
+        text-align: center;
+    }
+    .solved {
+        border: 2px solid lightseagreen;
+        background-color: lightgreen;
+    }
+    .invalid {
+        border: 2px solid lightcoral;
+        background-color: lightpink;
+    }
+
+    .flag-form form {
+        display: flex;
+        justify-content: center;
+        font-size: 1.2em;
+
+        input[type=text] {
+            width: 60%;
+            outline: none;
+            transition: .2s;
+            border: 1px solid #555;
+        }
+
+        button {
+            cursor: pointer;
+            background-color:#eee;
+            border: 1px solid black;
+            margin: 0 .1em;
+        }
+    }
+}

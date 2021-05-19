@@ -16,11 +16,13 @@ $header_menu_color: #bbb;
     margin-right: auto;
     margin-left: auto;
 
-    .home-button {
+    .home-button,
+    .home-button:visited {
         color: $header_text_color;
         margin-right: 1rem;
         white-space: nowrap;
         font-weight: bold;
+        text-decoration: none;
     }
 
     .navbar-content {

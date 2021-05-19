@@ -9,18 +9,27 @@
 <main>
     <div class="quiz-title">
         <h1>{{quiz.quiz_number}} [{{ quiz.category }}] {{ quiz.title }}</h1>
-        <p>Difficulty: {{ quiz.difficulty }}, Point: {{ quiz.point }}</p>
+        <p>Level: {{ quiz.difficulty }}, Point: {{ quiz.point }}</p>
     </div>
     <div class="statement">
         <p>{{ quiz.statement }}</p>
-    </div>
-    <div class="status">
-        {% if quiz.status == 1 %}
-        <p>Solved!</p>
-        {% elif quiz.status == 2 %}
-        <p>Invalid Flag...</p>
+        {% if quiz_files %}
+        <p>
+            {% for quiz_file in quiz_files %}
+            <a class="quiz_files" href="{{ quiz_file.file.url }}" download="{{ quiz_file.filename }}">{{ quiz_file.filename }}</a><br>
+            {% endfor %}
+        </p>
         {% endif %}
     </div>
+    {% if quiz.status == 1 %}
+    <div class="status solved">
+        <p>Congrats! You solved!</p>
+    </div>
+    {% elif quiz.status == 2 %}
+    <div class="status invalid">
+        <p>Invalid Flag...</p>
+    </div>
+    {% endif %}
     <div class="flag-form">
         <form method="POST" action="{% url 'quizzes:quiz' quiz.quiz_number %}">
             {% csrf_token %}

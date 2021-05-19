@@ -6,6 +6,6 @@ from . import views
 
 app_name = 'users'
 urlpatterns = [
-    path('home/', views.LandingPage.as_view(), name='home'),
+    path('home/', views.LandingPage, name='home'),
 ]
 
