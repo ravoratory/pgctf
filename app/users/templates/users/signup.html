@@ -1,15 +1,47 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load sass_tags %}
 
-{% block title %}
-Sign up
-{% endblock %}
+{% block title %}Sign up{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'users/signup.scss' %}">
+
+<main>
     <h2>Sign up</h2>
-    <form method="post">
+    <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">ユーザー登録</button>
+        <ul>
+            <li>
+                <div>
+                    <label>User ID</label><br>
+                    {{ form.username }}<br>
+                    {% for error in form.username.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </li>
+            <li>
+                <div>
+                    <label>Password</label><br>
+                    {{ form.password1 }}<br>
+                    {% for error in form.password1.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </li>
+            <li>
+                <div>
+                    <label>Confirm Password</label><br>
+                    {{ form.password2 }}<br>
+                    {% for error in form.password2.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </li>
+            <li class="register-button">
+                <button>Register</button>
+            </li>
+        </ul>
     </form>
+</main>
 {% endblock %}

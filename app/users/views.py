@@ -7,12 +7,13 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import CreateView
 
+from .forms import SignUpForm
 from .models import User
 from quizzes.models import Solved
 
 
 class SignUpView(CreateView):
-    form_class = UserCreationForm
+    form_class = SignUpForm
     template_name = "users/signup.html"
     success_url = reverse_lazy('sites:home')
 
