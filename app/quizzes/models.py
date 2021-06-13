@@ -35,6 +35,17 @@ class QuizFile(models.Model):
         return self.title
 
 
+class QuizAppendedUrl(models.Model):
+    title = models.CharField(max_length=50, blank=True, null=True)
+    url = models.CharField(max_length=256)
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.title or self.url
+
+
 class Quiz(models.Model):
     quiz_number = models.CharField('Quiz number', max_length=100, unique=True)
 
@@ -43,12 +54,13 @@ class Quiz(models.Model):
     category = models.ForeignKey(
         QuizCategory,
         related_name='quiz',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True
     )
 
     file = models.ManyToManyField(QuizFile, related_name='quiz', blank=True)
+    url = models.ManyToManyField(QuizAppendedUrl, related_name='quiz', blank=True)
 
     flag = models.CharField(
         'Flag',
