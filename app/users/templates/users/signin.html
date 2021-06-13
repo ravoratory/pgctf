@@ -1,15 +1,43 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load sass_tags %}
 
-{% block title %}
-Sign in
-{% endblock %}
+{% block title %}Sign in{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'users/signin.scss' %}">
+
+<main>
     <h2>Sign in</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">サインイン</button>
+        <ul>
+            <li>
+                {% if form.errors %}
+                <div class="signin-error">Invalid ID or Password</div>
+                {% endif %}
+            </li>
+            <li>
+                <div>
+                    <label>User ID</label><br>
+                    {{ form.username }}<br>
+                    {% for error in form.username.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </li>
+            <li>
+                <div>
+                    <label>Password</label><br>
+                    {{ form.password }}<br>
+                    {% for error in form.password.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </li>
+            <li class="submit-button">
+                <button>Sign in</button>
+            </li>
+        </ul>
     </form>
+</main>
 {% endblock %}

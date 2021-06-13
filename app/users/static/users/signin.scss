@@ -1,0 +1,43 @@
+main {
+    max-width: 1000px;
+    margin-right: auto;
+    margin-left: auto;
+    justify-content: center;
+    h2 {
+        text-align: center;
+        margin-bottom: 0;
+    }
+
+    form {
+        display: flex;
+        justify-content: center;
+
+        ul {
+            border: 2px solid black;
+            border-radius: .5rem;
+            padding: 2rem;
+            li {
+                list-style: none;
+
+                div {
+                    margin-bottom: 1rem;
+
+                    label {
+                        font-weight: bold;
+                    }
+                }
+
+                .signin-error {
+                    text-align: center;
+                }
+            }
+
+            .submit-button {
+                display: flex;
+                justify-content: center;
+                margin-top: .5rem;
+            }
+        }
+    }
+}
+
