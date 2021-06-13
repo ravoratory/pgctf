@@ -31,7 +31,7 @@ def ranking_page(request, *args, **kwargs):
         user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
 
     ranking = (User.objects
-        .filter(is_active=True)#, is_staff=False)
+        .filter(is_active=True, is_staff=False)
         .prefetch_related('solved')
         .annotate(points=Sum('solved__quiz__point'))
         .order_by('-date_joined')
