@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load sass_tags %}
 
-{% block title %}PG-CTF {{ quiz.quiz_number}}{% endblock %}
+{% block title %}{{ quiz.quiz_number}} [{{quiz.category}}] - PG-CTF{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% sass_src 'quizzes/quiz.scss' %}">
