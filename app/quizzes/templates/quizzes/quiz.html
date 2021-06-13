@@ -13,6 +13,15 @@
     </div>
     <div class="statement">
         <p>{{ quiz.statement }}</p>
+
+        {% if appended_url %}
+        <p>
+            {% for url in appended_url %}
+            <a class="quiz_files" href="{{ url.url }}">{{ url }}</a><br>
+            {% endfor %}
+        </p>
+        {% endif %}
+
         {% if quiz_files %}
         <p>
             {% for quiz_file in quiz_files %}

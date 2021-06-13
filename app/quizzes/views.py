@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views import generic
 
 from .forms import CheckFlagForm
-from .models import Quiz, QuizFile, Solved
+from .models import Quiz, QuizAppendedUrl, QuizFile, Solved
 
 
 QUIZ_STATUS_COLLECT = 1
@@ -25,6 +25,7 @@ class QuizView(LoginRequiredMixin, generic.View):
         user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
         quiz = self.get_quiz_or_404(self.kwargs.get('quiz_number'))
         quiz_files = QuizFile.objects.filter(quiz=quiz)
+        appended_url = QuizAppendedUrl.objects.filter(quiz=quiz)
 
         if Solved.objects.filter(user=request.user, quiz=quiz).exists():
             quiz.status = QUIZ_STATUS_COLLECT
@@ -33,7 +34,7 @@ class QuizView(LoginRequiredMixin, generic.View):
         return render(
             request,
             'quizzes/quiz.html',
-            {'form': form, 'quiz': quiz, 'user': user, 'quiz_files': quiz_files}
+            {'form': form, 'quiz': quiz, 'user': user, 'quiz_files': quiz_files, 'appended_url': appended_url}
         )
 
     def post(self, request, *args, **kwargs):
