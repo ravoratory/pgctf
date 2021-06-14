@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
     #3rd party
     'sass_processor',
+    'storages',
 
     #Django
     'django.contrib.admin',

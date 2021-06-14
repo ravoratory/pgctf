@@ -1,4 +1,6 @@
+boto3
 django
+django-storages
 psycopg2
 pillow
 uwsgi
