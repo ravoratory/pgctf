@@ -12,7 +12,7 @@
         <p>Level: {{ quiz.difficulty }}, Point: {{ quiz.point }}</p>
     </div>
     <div class="statement">
-        <p>{{ quiz.statement }}</p>
+        <p>{{ quiz.statement | safe}}</p>
 
         {% if appended_url %}
         <p>
