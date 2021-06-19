@@ -17,7 +17,7 @@
         {% if appended_url %}
         <p>
             {% for url in appended_url %}
-            <a class="quiz_files" href="{{ url.url }}">{{ url }}</a><br>
+            <a class="quiz_files" href="{{ url.url }}" target="_blank" rel="nofollow noopener">{{ url }}</a><br>
             {% endfor %}
         </p>
         {% endif %}

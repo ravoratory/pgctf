@@ -2,6 +2,7 @@ main {
     max-width: 1000px;
     margin-right: auto;
     margin-left: auto;
+    margin-bottom: 2rem;
 
     .statement {
         background-color: #eee;
@@ -9,8 +10,8 @@ main {
         padding: .1em 2rem;
         margin: 1rem 0;
 
-        code {
-            font-family: inherit;
+        a, a:visited {
+            color: #0000ee;
         }
 
         .quiz_files {

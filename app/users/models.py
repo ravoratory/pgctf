@@ -56,9 +56,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField('Emailアドレス', blank=True)
 
-    date_joined = models.DateTimeField('アカウント作成日', default=timezone.now)
+    date_joined = models.DateTimeField('アカウント作成日', editable=False)
 
-    date_started = models.DateTimeField('CTF開始時間', blank=True, null=True)
+    date_started = models.DateTimeField('CTF開始時間', blank=True, null=True, editable=False)
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'username'
@@ -87,3 +87,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.username
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.date_joined = timezone.now()
+        return super().save(self, *args, **kwargs)
