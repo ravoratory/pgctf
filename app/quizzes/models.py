@@ -24,7 +24,7 @@ class QuizCategory(models.Model):
 class QuizFile(models.Model):
     title = models.CharField(max_length=20, blank=True, null=True)
     file = models.FileField(upload_to='quiz_files/')
-    uploaded_at = models.DateTimeField(default=timezone.now)
+    uploaded_at = models.DateTimeField(default=timezone.now, editable=False)
     updated_at = models.DateTimeField(default=timezone.now)
 
     @property
@@ -34,16 +34,28 @@ class QuizFile(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.uploaded_at = timezone.now()
+        self.updated_at = timezone.now()
+        return super().save(*args, **kwargs)
+
 
 class QuizAppendedUrl(models.Model):
     title = models.CharField(max_length=50, blank=True, null=True)
     url = models.CharField(max_length=256)
 
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now, editable=False)
     updated_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title or self.url
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.created_at = timezone.now()
+        self.updated_at = timezone.now()
+        return super().save(*args, **kwargs)
 
 
 class Quiz(models.Model):
@@ -80,7 +92,7 @@ class Quiz(models.Model):
 
     published = models.BooleanField('Published', default=True)
 
-    created_at = models.DateTimeField('Created at', default=timezone.now)
+    created_at = models.DateTimeField('Created at', editable=False)
     updated_at = models.DateTimeField('Updated at', default=timezone.now)
 
     def __str__(self):
@@ -89,12 +101,18 @@ class Quiz(models.Model):
     class Meta:
         verbose_name_plural = 'Quizzes'
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.created_at = timezone.now()
+        self.updated_at = timezone.now()
+        return super().save(*args, **kwargs)
+
 
 class Solved(models.Model):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE)
 
-    solved_datetime = models.DateTimeField('Solved date', default=timezone.now)
+    solved_datetime = models.DateTimeField('Solved date', editable=False)
 
     def __str__(self):
         return f'{self.quiz.quiz_number}: {self.user.username} [{self.solved_datetime}]'
@@ -102,3 +120,8 @@ class Solved(models.Model):
     class Meta:
         verbose_name = 'Solved user'
         verbose_name_plural = 'Solved users'
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.solved_datetime = timezone.now()
+        return super().save(*args, **kwargs)

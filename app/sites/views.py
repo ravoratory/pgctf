@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, F, Q, Sum
+from django.db.models.expressions import Window
+from django.db.models.functions import Rank
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 
@@ -34,9 +36,12 @@ def ranking_page(request, *args, **kwargs):
         .filter(is_active=True, is_staff=False)
         .prefetch_related('solved')
         .annotate(points=Sum('solved__quiz__point'))
-        .order_by('-date_joined')
-        .values('username', 'points', 'date_joined')
-        .order_by(F('points').desc(nulls_last=True), '-date_joined')
+        .annotate(rank=Window(
+            expression=Rank(),
+            order_by=F('points').desc(nulls_last=True),
+        ))
+        .values('rank', 'username', 'points', 'date_joined')
+        .order_by('rank', '-date_joined')
     )
 
     return render(request, 'sites/ranking.html', {'user': user, 'ranking': ranking})

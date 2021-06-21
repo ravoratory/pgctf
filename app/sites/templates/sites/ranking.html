@@ -24,7 +24,7 @@
             {% else %}
                 <tr>
             {% endif %}
-                <td>{{ forloop.counter }}</td>
+                <td>{{ rank.rank }}</td>
                 <td>{{ rank.username }}</td>
                 <td>{{ rank.points | default:0 }}</td>
                 <td>{{ rank.date_joined | date:"Y-m-d H:i:s"}}</td>

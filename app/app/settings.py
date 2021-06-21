@@ -31,16 +31,16 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    #Local
+    # Local
     'sites.apps.SitesConfig',
     'users.apps.UsersConfig',
     'quizzes.apps.QuizzesConfig',
 
-    #3rd party
+    # 3rd party
     'sass_processor',
     'storages',
 
-    #Django
+    # Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -142,6 +142,7 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'sass_processor.finders.CssFinder',
 ]
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'users.User'
