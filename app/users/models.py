@@ -91,4 +91,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         if not self.id:
             self.date_joined = timezone.now()
-        return super().save(self, *args, **kwargs)
+        return super().save(*args, **kwargs)
