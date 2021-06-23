@@ -2,6 +2,10 @@ $header_back_color: black;
 $header_text_color: white;
 $header_menu_color: #bbb;
 
+body {
+    font-family: -apple-system, "Helvetica Neue", Arial, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", 'Segoe UI', sans-serif;
+}
+
 .navbar {
     background-color: $header_back_color;
 }
