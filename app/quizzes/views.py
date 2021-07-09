@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, render
@@ -6,6 +7,8 @@ from django.views import generic
 from .forms import CheckFlagForm
 from .models import Quiz, QuizAppendedUrl, QuizFile, Solved
 
+
+User = get_user_model()
 
 QUIZ_STATUS_COLLECT = 1
 QUIZ_STATUS_INVALID = 2
@@ -46,11 +49,15 @@ class QuizView(LoginRequiredMixin, generic.View):
         if not form.is_valid():
             return render(request, self.template_name, {'form': CheckFlagForm(), 'quiz': quiz, 'user': user})
         elif form.data['flag'] == quiz.flag:
+            user_count = User.objects.filter(is_staff=False).count()
+            solved_user_count = Solved.objects.filter(quiz=quiz, user__is_staff=False).count()
+            new_point = 50 + int(450 * (1 - solved_user_count / user_count))
+            Quiz.objects.filter(id=quiz.id).update(point=new_point)
+
             Solved.objects.get_or_create(user=request.user, quiz=quiz)
-            quiz.status = 1
+            quiz.status = QUIZ_STATUS_COLLECT
         else:
             quiz.status = QUIZ_STATUS_INVALID
-        print(form.data['flag'])
 
         user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
         return render(
