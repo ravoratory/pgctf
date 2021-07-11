@@ -1,13 +1,14 @@
-$header_back_color: black;
 $header_text_color: white;
-$header_menu_color: #bbb;
 
 body {
     font-family: -apple-system, "Helvetica Neue", Arial, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", 'Segoe UI', sans-serif;
 }
 
 .navbar {
-    background-color: $header_back_color;
+    // background: linear-gradient(90deg, #fd96f9, #96c6fd);
+    // background-color: #fd96f9;
+    // background-color: #96c6fd;
+    background-color: #111;
 }
 
 .container {
@@ -43,7 +44,7 @@ body {
 
             li {
                 display: list-item;
-                color: $header_menu_color;
+                color: $header_text_color;
                 margin: 0 .5rem;
 
                 a, a:visited {

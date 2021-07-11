@@ -21,7 +21,7 @@
                 <th>Category</th>
                 <th>Level</th>
                 <th>Points</th>
-                <th>Solved</th>
+                <th></th>
             </tr>
             {% for quiz in quizzes %}
             <tr>
@@ -30,9 +30,11 @@
                 <td>{{ quiz.category | default:" " }}</td>
                 <td>{{ quiz.difficulty }}</td>
                 <td>{{ quiz.point }}</td>
-                <td>
-                    {% if quiz.is_solved %}OK{% endif %}
-                </td>
+                {% if quiz.is_solved %}
+                <td class="solved-td"><div>OK</div></td>
+                {% else %}
+                <td class="not-solved-td"><div>-</div></td>
+                {% endif %}
             </tr>
             {% endfor %}
         </table>
