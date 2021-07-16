@@ -51,8 +51,9 @@ class QuizView(LoginRequiredMixin, generic.View):
         elif form.data['flag'] == quiz.flag:
             user_count = User.objects.filter(is_staff=False).count()
             solved_user_count = Solved.objects.filter(quiz=quiz, user__is_staff=False).count()
-            new_point = 50 + int(450 * (1 - solved_user_count / user_count))
-            Quiz.objects.filter(id=quiz.id).update(point=new_point)
+            if user_count != 0:
+                new_point = 50 + int(450 * (1 - solved_user_count / user_count))
+                Quiz.objects.filter(pk=quiz.id).update(point=new_point)
 
             Solved.objects.get_or_create(user=request.user, quiz=quiz)
             quiz.status = QUIZ_STATUS_COLLECT

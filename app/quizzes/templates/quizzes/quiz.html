@@ -39,6 +39,7 @@
         <p>Invalid Flag...</p>
     </div>
     {% endif %}
+    {% if quiz.status != 1 %}
     <div class="flag-form">
         <form method="POST" action="{% url 'quizzes:quiz' quiz.quiz_number %}">
             {% csrf_token %}
@@ -46,5 +47,6 @@
             <button>Submit</button>
         </form>
     </div>
+    {% endif %}
 </main>
 {% endblock %}
