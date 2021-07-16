@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}404 - PG-CTF{% endblock %}
+{% block title %}403 - PG-CTF{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/error_page.css' %}">
 
 <main>
     <div>
-        <h1>404</h1>
-        <h3>Not Found</h3>
-        <p>This is not the web page you are looking for.</p>
+        <h1>403</h1>
+        <h3>Forbidden</h3>
+        <p>The request was interrupted because CSRF validation failed.</p>
     </div>
 </main>
 {% endblock %}

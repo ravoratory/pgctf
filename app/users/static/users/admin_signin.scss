@@ -8,6 +8,17 @@ main {
         margin-bottom: 0;
     }
 
+    .errornote {
+        margin: 1rem 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        div {
+            width: 50%;
+        }
+    }
+
     form {
         display: flex;
         justify-content: center;
@@ -45,4 +56,5 @@ main {
         }
     }
 }
+
 
