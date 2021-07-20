@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}404 - PG-CTF{% endblock %}
+{% block title %}500 - PG-CTF{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/error_page.css' %}">
 
 <main>
     <div>
-        <h1>404</h1>
-        <h3>Not Found</h3>
-        <p>This is not the web page you are looking for.</p>
+        <h1>500</h1>
+        <h3>Internal Server Error</h3>
+        <p>An unexpected error seems to have occured.</p>
     </div>
 </main>
 {% endblock %}

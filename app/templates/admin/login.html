@@ -1,14 +1,24 @@
 {% extends 'base.html' %}
 {% load sass_tags %}
 
-{% block title %}Sign in - PG-CTF{% endblock %}
+{% block title %}Staff sign in - PG-CTF{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% sass_src 'users/signin.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'users/admin_signin.scss' %}">
 
 <main>
-    <h2>Sign in</h2>
-    <form method="post">
+    <h2>PG-CTF 管理サイト</h2>
+
+    {% if user.is_authenticated %}
+    <div class="errornote">
+        <div>
+            You are authenticated as {{ username }}, but are not authorized to
+            access this page. Would you like to login to a different account?
+        </div>
+    </div>
+    {% endif %}
+
+    <form action="{{ app_path }}" method="post" id="login-form">
         {% csrf_token %}
         <ul>
             <li>
@@ -18,7 +28,7 @@
             </li>
             <li>
                 <div>
-                    <label>Username</label><br>
+                    <label>Staff ID</label><br>
                     {{ form.username }}<br>
                     {% for error in form.username.errors %}
                     <p>{{ error }}</p>

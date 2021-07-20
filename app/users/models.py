@@ -10,7 +10,7 @@ from django.utils.deconstruct import deconstructible
 
 @deconstructible
 class UsernameValidator(RegexValidator):
-    regex = r'^[\w_]+$'
+    regex = r'^\w+$'
     message = "英数字と'_'のみが使用できます。"
     flags = 0
 
@@ -40,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username_validator = UsernameValidator()
 
     username = models.CharField(
-        'ユーザー名',
+        'Username',
         max_length=30,
         unique=True,
         help_text="ユーザー名は4~30文字の英数字と'_'が使用できます",
@@ -54,9 +54,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    email = models.EmailField('Emailアドレス', blank=True)
+    email = models.EmailField(blank=True)
 
-    date_joined = models.DateTimeField('アカウント作成日', editable=False)
+    date_joined = models.DateTimeField(default=timezone.now(), editable=False)
 
     date_started = models.DateTimeField('CTF開始時間', blank=True, null=True, editable=False)
 
@@ -65,18 +65,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email',]
 
     is_staff = models.BooleanField(
-        'スタッフ権限',
         default=False,
         help_text='管理サイトにログインできるかを指定します。',
     )
     is_active = models.BooleanField(
-        'アクティブ',
         default=True,
     )
 
     class Meta:
-        verbose_name = 'ユーザー'
-        verbose_name_plural = 'ユーザー'
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
 
     def clean(self):
         super().clean()
@@ -87,8 +85,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.username
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.date_joined = timezone.now()
-        return super().save(*args, **kwargs)

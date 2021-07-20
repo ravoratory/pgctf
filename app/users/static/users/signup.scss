@@ -12,6 +12,11 @@ main {
         display: flex;
         justify-content: center;
 
+        input {
+            box-sizing: border-box;
+            width: 100%;
+        }
+
         ul {
             border: 2px solid black;
             border-radius: .5rem;
