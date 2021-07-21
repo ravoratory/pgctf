@@ -42,7 +42,7 @@ def ranking_page(request, *args, **kwargs):
         ))
         .annotate(last_solve=Max('solved__solved_datetime'))
         .values('rank', 'username', 'points', 'last_solve')
-        .order_by('rank', '-last_solve')
+        .order_by('rank', 'last_solve')
     )
 
     return render(request, 'sites/ranking.html', {'user': user, 'ranking': ranking})
