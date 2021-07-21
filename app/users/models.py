@@ -56,7 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(blank=True)
 
-    date_joined = models.DateTimeField(default=timezone.now(), editable=False)
+    date_joined = models.DateTimeField(default=timezone.now, editable=False)
 
     date_started = models.DateTimeField('CTF開始時間', blank=True, null=True, editable=False)
 
