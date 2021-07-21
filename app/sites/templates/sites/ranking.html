@@ -15,25 +15,25 @@
             <tr>
                 <th>Rank</th>
                 <th>Username</th>
-                <th>Points</th>
-                <th>Registration date</th>
+                <th>Score</th>
+                <th>Last Solve</th>
             </tr>
             {% for rank in ranking %}
             {% if user.username == rank.username %}
-                <tr class="is_user">
+            <tr class="is_user">
             {% else %}
-                <tr>
+            <tr>
             {% endif %}
                 <td>{{ rank.rank }}</td>
                 <td>{{ rank.username }}</td>
                 <td>{{ rank.points | default:0 }}</td>
-                <td>{{ rank.date_joined | date:"Y-m-d H:i:s"}}</td>
+                <td>{{ rank.last_solve | date:"Y-m-d H:i:s"}}</td>
             </tr>
             {% endfor %}
         </table>
     </div>
     <div>
-        <p>点数が同じ場合は登録日が新しい順になります</p>
+        <p>点数が同じ場合は、後に解いた人が上になります</p>
     </div>
 </main>
 {% endblock %}

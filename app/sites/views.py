@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, F, Q, Sum
+from django.db.models import Count, F, Max, Q, Sum
 from django.db.models.expressions import Window
 from django.db.models.functions import Rank
 from django.shortcuts import render
@@ -40,8 +40,9 @@ def ranking_page(request, *args, **kwargs):
             expression=Rank(),
             order_by=F('points').desc(nulls_last=True),
         ))
-        .values('rank', 'username', 'points', 'date_joined')
-        .order_by('rank', '-date_joined')
+        .annotate(last_solve=Max('solved__solved_datetime'))
+        .values('rank', 'username', 'points', 'last_solve')
+        .order_by('rank', '-last_solve')
     )
 
     return render(request, 'sites/ranking.html', {'user': user, 'ranking': ranking})
