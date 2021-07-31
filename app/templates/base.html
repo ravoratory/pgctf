@@ -12,6 +12,7 @@
         <meta name="author" content="disVill">
         <link href="{% static 'css/normalize.css' %}" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="{% sass_src 'css/header.scss' %}" type="text/css">
+        {% block head %}{% endblock %}
     </head>
     <body>
         {% include "header.html" with user=user %}

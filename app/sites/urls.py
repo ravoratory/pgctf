@@ -8,5 +8,5 @@ app_name = 'sites'
 urlpatterns = [
     path('', views.LandingPage, name='home'),
     path('ranking/', views.ranking_page, name='ranking'),
+    path('ranking-chart/', views.ranking_chart, name='ranking_chart'),
 ]
-

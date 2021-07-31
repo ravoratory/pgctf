@@ -1,15 +1,21 @@
 {% extends "base.html" %}
+{% load static %}
 {% load sass_tags %}
 
 {% block title %}Ranking - PG-CTF{% endblock %}
 
-{% block content %}
+{% block head %}
 <link rel="stylesheet" type="text/css" href="{% sass_src 'sites/ranking.scss' %}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+<script src="https://unpkg.com/chartjs-plugin-colorschemes"></script>
+{% endblock %}
 
+{% block content %}
 <main>
     <div class="page-title">
         <h1>Ranking</h1>
     </div>
+    <canvas id="chart"></canvas>
     <div>
         <table>
             <tr>
@@ -33,4 +39,5 @@
         </table>
     </div>
 </main>
+<script src="{% static 'js/ranking_chart.js' %}"></script>
 {% endblock %}
