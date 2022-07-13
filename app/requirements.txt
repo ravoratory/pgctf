@@ -7,3 +7,4 @@ uwsgi
 libsass
 django-compressor
 django-sass-processor
+django-allauth

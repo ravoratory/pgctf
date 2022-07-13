@@ -29,6 +29,7 @@ urlpatterns = [
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('signin/', views.SignInView.as_view(), name='signin'),
     path('signout/', auth_view.LogoutView.as_view(), name='signout'),
+    path('community/', include('allauth.urls'))
 ]
 
 if settings.DEBUG:

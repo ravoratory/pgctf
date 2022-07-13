@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load socialaccount %}
 {% load sass_tags %}
 
 {% block title %}Sign in - PG-CTF{% endblock %}
@@ -8,6 +9,7 @@
 
 <main>
     <h2>Sign in</h2>
+    <a href="{% provider_login_url "pgrit" %}">PGrit</a>
     <form method="post">
         {% csrf_token %}
         <ul>
