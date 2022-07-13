@@ -17,25 +17,25 @@ class PGritAccount(ProviderAccount):
 
 class PGritProvider(OAuth2Provider):
     id = 'pgrit'
-    name = 'PGrit'
+    name = 'PGCTF'
     account_class = PGritAccount
     
     def get_auth_url(self, requeset, action):
-        return 'https://community.4nonome.com/oauth/authorize'
+        return 'https://community.4nonome.com/oauth/authorize/'
     
     def get_default_scope(self):
-        return ['read',]
+        return ['read']
     
     def extract_uid(self, data):
         return data['username']
     
     def random_email(self, salt):
-        return hashlib.sha256(salt.encode()).hexdigest()
+        return hashlib.sha256(salt.encode()).hexdigest() + '@example.com'
     
     def extract_common_fields(self, data):
         return dict(id=data.get('username'),
-                    name=data.get('display_name'),
-                    email=self.random_email(data.get('displayname')),)
+                    username=data.get('username'),
+                    email=self.random_email(data.get('username')),)
 
 
 provider_classes = [PGritProvider]

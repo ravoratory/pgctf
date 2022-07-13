@@ -175,6 +175,16 @@ SOCIALACCOUNT_PROVIDERS = {
         'APP':{
             'client_id': os.getenv('CLIENT_ID', 'clientid'),
             'secret': os.getenv('CLIENT_SECRET', 'secret')
-        }
+        },
     }
 }
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_REQUIRED = True

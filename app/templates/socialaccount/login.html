@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+{% block content %}
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">連携する！</button>
+</form>
+<ul class="errorlist">
+    {{ auth_error }}
+{% for key, value in form.errors.items %}
+    <li>{{ key }} {{ value }}</li>
+{% endfor %}
+</ul>
+{% endblock %}
