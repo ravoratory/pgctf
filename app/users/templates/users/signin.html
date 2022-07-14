@@ -9,36 +9,10 @@
 
 <main>
     <h2>Sign in</h2>
-    <a href="{% provider_login_url "pgrit" %}">PGrit</a>
-    <form method="post">
+    <form method="post" action="{% provider_login_url "pgrit" %}">
         {% csrf_token %}
         <ul>
-            <li>
-                {% if form.errors %}
-                <div class="signin-error">Usernameまたはパスワードが無効です</div>
-                {% endif %}
-            </li>
-            <li>
-                <div>
-                    <label>Username</label><br>
-                    {{ form.username }}<br>
-                    {% for error in form.username.errors %}
-                    <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-            </li>
-            <li>
-                <div>
-                    <label>Password</label><br>
-                    {{ form.password }}<br>
-                    {% for error in form.password.errors %}
-                    <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-            </li>
-            <li class="submit-button">
-                <button>Sign in</button>
-            </li>
+            <button class="btn">Sign in with PGrit Account</button>
         </ul>
     </form>
 </main>
