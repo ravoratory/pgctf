@@ -31,7 +31,7 @@ class SignInView(generic.View):
             return render(request, 'users/signin.html', {'form': form})
         username = form.cleaned_data.get('username')
         user = User.objects.get(username=username)
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('/')
 
     def get(self, request, *args, **kwargs):
