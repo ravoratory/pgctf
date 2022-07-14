@@ -14,7 +14,6 @@
                 <li><a href="{% url 'signout' %}">Sign out</a></li>
                 <li class="user-info">{{ user.points | default:"0" }} pts @{{ user }}</li>
             {% else %}
-                <li><a href="{% url 'signup' %}">Sign up</a></li>
                 <li><a href="{% url 'signin' %}">Sign in</a></li>
             {% endif %}
             </ul>
