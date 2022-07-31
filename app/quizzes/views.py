@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
+from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
 
@@ -18,10 +19,14 @@ class QuizView(LoginRequiredMixin, generic.View):
     template_name = 'quizzes/quiz.html'
 
     def get_quiz_or_404(self, quiz_number):
-        return get_object_or_404(
+        quiz = get_object_or_404(
             Quiz.objects.select_related('category'),
             quiz_number=quiz_number,
         )
+        if not quiz.published and not self.request.user.is_staff:
+            raise Http404
+
+        return quiz
 
     def get(self, request, *arg, **kwargs):
         user = request.user

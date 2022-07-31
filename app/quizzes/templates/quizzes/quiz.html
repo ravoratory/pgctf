@@ -8,7 +8,7 @@
 
 <main>
     <div class="quiz-title">
-        <h1>{{quiz.quiz_number}} [{{ quiz.category }}] {{ quiz.title }}</h1>
+        <h1>{{quiz.quiz_number}} [{{ quiz.category }}] {{ quiz.title }} {% if quiz.published == False %}--Draft--{% endif %}</h1>
         <p>Level: {{ quiz.difficulty }}, Point: {{ quiz.point }}</p>
     </div>
     <div class="statement">

@@ -22,10 +22,12 @@ def LandingPage(request, *args, **kwargs):
     user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
     quizzes = (Quiz.objects
         .select_related('category')
-        .filter(published=True)
         .order_by('quiz_number')
         .annotate(is_solved=Count('solved_users', filter=Q(solved__user=request.user)))
     )
+
+    if not user.is_staff:
+        quizzes = quizzes.filter(published=True)
 
     return render(request, 'sites/home.html', {'user': user, 'quizzes': quizzes})
 
