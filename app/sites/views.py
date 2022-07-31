@@ -24,6 +24,7 @@ def LandingPage(request, *args, **kwargs):
         .select_related('category')
         .order_by('quiz_number')
         .annotate(is_solved=Count('solved_users', filter=Q(solved__user=request.user)))
+        .annotate(winners=Count('solved_users', filter=Q(solved__user__is_staff=False)))
     )
 
     if not user.is_staff:
