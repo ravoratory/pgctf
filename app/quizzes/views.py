@@ -49,13 +49,15 @@ class QuizView(LoginRequiredMixin, generic.View):
         if not form.is_valid():
             return render(request, self.template_name, {'form': CheckFlagForm(), 'quiz': quiz, 'user': user})
         elif form.data['flag'] == quiz.flag:
+            Solved.objects.get_or_create(user=request.user, quiz=quiz)
+
             user_count = User.objects.filter(is_staff=False).count()
             solved_user_count = Solved.objects.filter(quiz=quiz, user__is_staff=False).count()
             if user_count != 0:
                 new_point = 50 + int(450 * (1 - solved_user_count / user_count))
                 Quiz.objects.filter(pk=quiz.id).update(point=new_point)
+                quiz.point = new_point
 
-            Solved.objects.get_or_create(user=request.user, quiz=quiz)
             quiz.status = QUIZ_STATUS_COLLECT
         else:
             quiz.status = QUIZ_STATUS_INVALID
