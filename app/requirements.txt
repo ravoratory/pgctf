@@ -1,5 +1,5 @@
 boto3
-django
+django>=3.2,<4.0
 django-storages
 psycopg2
 pillow
