@@ -1,14 +1,16 @@
-FROM python:3.8
-ENV PYTHONUNBUFFERED 1
+FROM python:3.10-slim-buster as builder
 
-RUN apt-get update && \
-    apt-get install -y netcat
-RUN pip install --upgrade pip
-
-RUN mkdir /code
 WORKDIR /code
-
 COPY requirements.txt /code/
+
+RUN apt update
+RUN apt install -y gcc
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+FROM python:3.10-slim-buster as runner
+
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+
+WORKDIR /code
 COPY . /code/

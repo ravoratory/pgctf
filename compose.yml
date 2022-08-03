@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   db:
     image: postgres
@@ -9,6 +7,12 @@ services:
       - POSTGRES_PASSWORD=password
     volumes:
       - ./db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pg -d postgres "]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   web:
     build: ./app
@@ -19,14 +23,9 @@ services:
     env_file:
       - ./.env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     command: >
       /bin/sh -c
-        'echo "Waiting for postgres..." &&
-        while ! nc -z db 5432; do sleep 1; done &&
-        echo "PostgreSQL started" &&
-
-        python manage.py makemigrations users &&
-        python manage.py makemigrations &&
-        python manage.py migrate &&
+        'python manage.py migrate &&
         python manage.py runserver 0.0.0.0:8080'
