@@ -11,6 +11,7 @@ RUN pip install -r requirements.txt
 FROM python:3.10-slim-buster as runner
 
 COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=builder /usr/local/bin/uwsgi /usr/local/bin/uwsgi
 
 WORKDIR /code
 COPY . /code/
