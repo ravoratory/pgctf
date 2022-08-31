@@ -5,6 +5,6 @@ from . import views
 
 app_name = 'problems'
 urlpatterns = [
-    path('only_invalid_ip', views.only_invalid_ip, name='only_invalid_ip'),
+    path('only_limited_host', views.only_limited_host, name='only_limited_host'),
 ]
 

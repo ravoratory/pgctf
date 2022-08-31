@@ -6,9 +6,9 @@ from django.http import HttpRequest
 
 @login_required
 @require_GET
-def only_invalid_ip(request: HttpRequest):
-    host: str = request.get_host().split(':')[0]
-    if host == '123.456.789.123':  # ?????
+def only_limited_host(request: HttpRequest):
+    host: str = request.get_host()
+    if host == 'example.com':  # ?????
         return render(request, 'problems/success.html')
     else:
         return render(request, 'problems/error.html', {'host': host})
