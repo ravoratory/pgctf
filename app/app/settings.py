@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'sites.apps.SitesConfig',
     'users.apps.UsersConfig',
     'quizzes.apps.QuizzesConfig',
+    'problems.apps.ProblemsConfig',
 
     # 3rd party
     'sass_processor',
@@ -165,7 +166,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 LOGIN_URL = '/signin/'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL='/signin/'
+LOGOUT_REDIRECT_URL = '/signin/'
 
 # login with PGrit
 
@@ -188,3 +189,5 @@ ACCOUNT_USERNAME_REQUIRED = False
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_EMAIL_REQUIRED = True
+
+USE_X_FORWARDED_HOST = True

@@ -22,6 +22,7 @@ from django.urls import path, include
 urlpatterns = [
     path('', include('sites.urls', namespace='sites')),
     path('', include('users.urls', namespace='users')),
+    path('', include('problems.urls', namespace='problems')),
     path('admin/', admin.site.urls),
     path('problems/', include('quizzes.urls', namespace='quizzes')),
     # path('signup/', views.SignUpView.as_view(), name='signup'),
