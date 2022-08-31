@@ -11,4 +11,4 @@ def only_limited_host(request: HttpRequest):
     if host == 'example.com':  # ?????
         return render(request, 'problems/success.html')
     else:
-        return render(request, 'problems/error.html', {'host': host})
+        return render(request, 'problems/error.html')
