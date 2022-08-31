@@ -1,0 +1,3 @@
+main{max-width:1000px;margin-right:auto;margin-left:auto;margin-bottom:2rem}main .problems{border-collapse:collapse;width:100%}main .problems a,main .problems a:visited{color:#0000cc}main .problems tr:first-child{border-bottom:1px solid black}main .problems tr{border-bottom:1px solid #ddd}main .problems tr:nth-child(n + 2):hover{background-color:#eee}main .problems th,main .problems td{text-align:left;padding:0.5rem;width:5%}main .problems th:nth-child(2){width:50%}
+
+/*# sourceMappingURL=profile.css.map */

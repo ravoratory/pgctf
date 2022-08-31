@@ -31,7 +31,7 @@
             <tr>
             {% endif %}
                 <td>{{ rank.rank }}</td>
-                <td>{{ rank.username }}</td>
+                <td><a href="{% url 'users:profile' rank.username %}">{{ rank.username }}</a></td>
                 <td>{{ rank.points | default:0 }}</td>
                 <td>{{ rank.last_solve | date:"Y-m-d H:i:s"}}</td>
             </tr>

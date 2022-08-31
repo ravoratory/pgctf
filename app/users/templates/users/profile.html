@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+{% load sass_tags %}
+
+{% block title %}{{ detail_user.username }} - PG-CTF{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'users/profile.scss' %}">
+
+<main>
+    <h2>{{ detail_user.username }} [{{ detail_user.points }} pts]</h2>
+    <p>Solved Problems</p>
+    <table class="problems">
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Level</th>
+            <th>Points</th>
+        </tr>
+        {% for solve in solved %}
+        <tr>
+            <td>{{ solve.quiz.quiz_number }}</td>
+            <td><a href="{% url 'quizzes:quiz' solve.quiz.quiz_number %}">{{ solve.quiz.title }}</a> {% if solve.quiz.published == False %}[Draft]{% endif %}</td>
+            <td>{{ solve.quiz.category | default:" " }}</td>
+            <td>{{ solve.quiz.difficulty }}</td>
+            <td>{{ solve.quiz.point }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

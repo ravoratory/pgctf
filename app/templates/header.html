@@ -11,10 +11,10 @@
             </ul>
             <ul class="navbar-menu">
             {% if user.is_authenticated %}
-                <li><a href="{% url 'signout' %}">Sign out</a></li>
-                <li class="user-info">{{ user.points | default:"0" }} pts @{{ user }}</li>
+                <li><a href="{% url 'users:signout' %}">Sign out</a></li>
+                <li class="user-info">{{ user.points | default:"0" }} pts <a href="{% url 'users:profile' user.username %}">@{{ user }}</a></li>
             {% else %}
-                <li><a href="{% url 'signin' %}">Sign in</a></li>
+                <li><a href="{% url 'users:signin' %}">Sign in</a></li>
             {% endif %}
             </ul>
         </div>

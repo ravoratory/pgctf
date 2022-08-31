@@ -1,5 +1,5 @@
 from django.contrib.auth import login
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -41,3 +41,22 @@ class SignInView(generic.View):
 
         form = AuthenticationForm(request.POST)
         return render(request, 'users/signin.html', {'form': form, 'user': request.user})
+
+
+class UserDetailView(generic.DetailView):
+    model = User
+    template_name = "users/profile.html"
+    slug_url_kwarg = 'username'
+    slug_field = 'username'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['detail_user'] = self.object
+        context['detail_user'].points = Solved.objects.filter(user=context['detail_user'], quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
+        context['solved'] = Solved.objects.filter(user=self.object).select_related('quiz')
+
+        if self.request.user.is_authenticated:
+            context['user'].points = Solved.objects.filter(user=context['user'], quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
+
+        return context
