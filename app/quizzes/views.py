@@ -61,7 +61,7 @@ class QuizView(LoginRequiredMixin, generic.View):
             ))
             .annotate(username=F('user__username'))
             .values('username', 'solved_datetime', 'rank')
-            .order_by('-solved_datetime')
+            .order_by('rank', 'username')
         )
 
     def get(self, request, *arg, **kwargs):
