@@ -22,19 +22,25 @@ QUIZ_STATUS_INVALID = 2
 @login_required
 @require_GET
 def quiz_list_view(request, *args, **kwargs):
+    def get_quizzes(is_extra=False):
+        return (Quiz.objects
+            .filter(is_extra=is_extra)
+            .select_related('category')
+            .order_by('quiz_number')
+            .annotate(is_solved=Count('solved_users', filter=Q(solved__user=request.user)))
+            .annotate(winners=Count('solved_users', filter=Q(solved__user__is_staff=False)))
+        )
+
     user = request.user
     user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
-    quizzes = (Quiz.objects
-        .select_related('category')
-        .order_by('quiz_number')
-        .annotate(is_solved=Count('solved_users', filter=Q(solved__user=request.user)))
-        .annotate(winners=Count('solved_users', filter=Q(solved__user__is_staff=False)))
-    )
+    quizzes = get_quizzes()
+    extra_quizzes = get_quizzes(is_extra=True)
 
     if not user.is_staff:
         quizzes = quizzes.filter(published=True)
+        extra_quizzes = extra_quizzes.filter(published=True)
 
-    return render(request, 'quizzes/quizzes.html', {'user': user, 'quizzes': quizzes})
+    return render(request, 'quizzes/quizzes.html', {'user': user, 'quizzes': quizzes, 'extra_quizzes': extra_quizzes})
 
 
 class QuizView(LoginRequiredMixin, generic.View):

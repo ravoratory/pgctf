@@ -39,6 +39,34 @@
             </tr>
             {% endfor %}
         </table>
+
+        {% if extra_quizzes %}
+        <p>Extra Problems</p>
+        <table class="problems">
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Level</th>
+                <th>Points</th>
+                <th>Winners</th>
+                <th>Solved</th>
+            </tr>
+            {% for quiz in extra_quizzes %}
+            <tr>
+                <td>{{ quiz.quiz_number }}</td>
+                <td><a href="{% url 'quizzes:quiz' quiz.quiz_number %}">{{ quiz.title }}</a> {% if quiz.published == False %}[Draft]{% endif %}</td>
+                <td>{{ quiz.category | default:" " }}</td>
+                <td>{{ quiz.difficulty }}</td>
+                <td>{{ quiz.point }}</td>
+                <td>{{ quiz.winners }}</td>
+                <td>
+                    {% if quiz.is_solved %}OK{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
     </div>
 </main>
 {% endblock %}
