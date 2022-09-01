@@ -8,7 +8,7 @@ class Main(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.body
+        return "Main"
 
 
 class Announcement(models.Model):
