@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count, Q, Sum
-from django.db.models import F, Max, Sum
+from django.db.models import Count, F, Q, Sum
 from django.db.models.expressions import Window
 from django.db.models.functions import Rank
 from django.http import Http404
