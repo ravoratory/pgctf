@@ -9,7 +9,7 @@
 <main>
     <div class="quiz-title">
         <h1>{{quiz.quiz_number}} [{{ quiz.category }}] {{ quiz.title }} {% if quiz.published == False %}--Draft--{% endif %}</h1>
-        <p>Level: {{ quiz.difficulty }}, Point: {{ quiz.point }}</p>
+        <p>Level: {{ quiz.difficulty }}, Point: {{ quiz.point }}{% if quiz.author %}, Author: {{ quiz.author }}{% endif %}</p>
     </div>
     <div class="statement">
         <p>{{ quiz.statement | safe}}</p>
@@ -48,5 +48,26 @@
         </form>
     </div>
     {% endif %}
+
+    <p class="winners-nav">Winners</p>
+    <table>
+        <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Solved at</th>
+        </tr>
+        {% for rank in solved_users %}
+        {% if user.username == rank.user.username %}
+        <tr class="is_user">
+        {% else %}
+        <tr>
+        {% endif %}
+            <td>{{ rank.rank }}</td>
+            <td><a href="{% url 'users:profile' rank.username %}">{{ rank.username }}</a></td>
+            <td>{{ rank.solved_datetime | date:"Y-m-d H:i:s"}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
 </main>
 {% endblock %}

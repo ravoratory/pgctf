@@ -52,4 +52,49 @@ main {
             margin: 0 .1em;
         }
     }
+
+    .winners-nav {
+        font-size: 1.5rem;
+        font-weight: bolder;
+        margin: 1rem 0;
+        padding: .5em 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    table {
+        margin: 1rem auto;
+        border-collapse: collapse;
+        table-layout: auto;
+        width: 100%;
+
+        tr:first-child {
+            border-bottom: 1px solid black;
+        }
+        tr {
+            border-bottom: 1px solid #ddd;
+        }
+        tr:nth-child(n+2):hover {
+            background-color: #eee;
+        }
+        .is_user {
+            background-color: #eee;
+        }
+
+        th, td{
+            text-align: left;
+            padding: .5rem;
+            width: 6%;
+        }
+
+        th:nth-child(2) {
+            width: 50%;
+        }
+        th:nth-child(3) {
+            width: 20%;
+        }
+
+        a, a:visited {
+            color: #0000ee;
+        }
+    }
 }

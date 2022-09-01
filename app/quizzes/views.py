@@ -2,6 +2,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q, Sum
+from django.db.models import F, Max, Sum
+from django.db.models.expressions import Window
+from django.db.models.functions import Rank
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
@@ -48,6 +51,19 @@ class QuizView(LoginRequiredMixin, generic.View):
 
         return quiz
 
+    def get_solved_users(self, quiz):
+        return (Solved.objects
+            .filter(quiz=quiz, user__is_staff=False)
+            .prefetch_related('user')
+            .annotate(rank=Window(
+                expression=Rank(),
+                order_by=F('solved_datetime').asc(),
+            ))
+            .annotate(username=F('user__username'))
+            .values('username', 'solved_datetime', 'rank')
+            .order_by('-solved_datetime')
+        )
+
     def get(self, request, *arg, **kwargs):
         user = request.user
         user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
@@ -59,10 +75,18 @@ class QuizView(LoginRequiredMixin, generic.View):
             quiz.status = QUIZ_STATUS_COLLECT
 
         form = CheckFlagForm()
+
         return render(
             request,
             'quizzes/quiz.html',
-            {'form': form, 'quiz': quiz, 'user': user, 'quiz_files': quiz_files, 'appended_url': appended_url}
+            {
+                'form': form,
+                'quiz': quiz,
+                'user': user,
+                'quiz_files': quiz_files,
+                'appended_url': appended_url,
+                'solved_users': self.get_solved_users(quiz),
+            }
         )
 
     def post(self, request, *args, **kwargs):
@@ -88,8 +112,15 @@ class QuizView(LoginRequiredMixin, generic.View):
             quiz.status = QUIZ_STATUS_INVALID
 
         user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
+
         return render(
             request,
             'quizzes/quiz.html',
-            {'form': form, 'quiz': quiz, 'user': user, 'quiz_files': quiz_files}
+            {
+                'form': form,
+                'quiz': quiz,
+                'user': user,
+                'quiz_files': quiz_files,
+                'solved_users': self.get_solved_users(quiz),
+            }
         )

@@ -84,6 +84,8 @@ class Quiz(models.Model):
     difficulty = models.IntegerField('Difficulty')
     point = models.IntegerField('Point')
 
+    author = models.CharField('Author', max_length=100, blank=True, null=True)
+
     solved_users = models.ManyToManyField(
         'users.User',
         related_name='solved_quiz',
@@ -94,6 +96,8 @@ class Quiz(models.Model):
 
     created_at = models.DateTimeField('Created at', editable=False)
     updated_at = models.DateTimeField('Updated at', default=timezone.now)
+
+    is_extra = models.BooleanField('Is extra', default=False, blank=True, null=True)
 
     def __str__(self):
         return f'{self.quiz_number}: {self.title}'
