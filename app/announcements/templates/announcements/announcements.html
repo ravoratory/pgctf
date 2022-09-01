@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load sass_tags %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'announcements/announcements.scss' %}">
+
+<main>
+    <div class="lp">
+        {{ main | safe}}
+    </div>
+    <p class="nav">Announces</p>
+    {% for announce in announcements %}
+    <div class="content">
+        <div class="title">{{ announce.title }}</div>
+        <div class="announce-body">{{ announce.body | safe }}</div>
+        <div class="datetime">{{ announce.created_at|date:"Y/m/d H:i:s" }}</div>
+    </div>
+    {% endfor %}
+</main>
+{% endblock %}

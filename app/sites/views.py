@@ -1,36 +1,17 @@
 import json
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Count, F, Max, Q, Sum
+from django.db.models import F, Max, Sum
 from django.db.models.expressions import Window
 from django.db.models.functions import Rank
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 
-from quizzes.models import Quiz, Solved
+from quizzes.models import Solved
 
 User = get_user_model()
-
-
-@login_required
-@require_GET
-def LandingPage(request, *args, **kwargs):
-    user = request.user
-    user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
-    quizzes = (Quiz.objects
-        .select_related('category')
-        .order_by('quiz_number')
-        .annotate(is_solved=Count('solved_users', filter=Q(solved__user=request.user)))
-        .annotate(winners=Count('solved_users', filter=Q(solved__user__is_staff=False)))
-    )
-
-    if not user.is_staff:
-        quizzes = quizzes.filter(published=True)
-
-    return render(request, 'sites/home.html', {'user': user, 'quizzes': quizzes})
 
 
 @require_GET

@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('problems.urls', namespace='problems')),
     path('admin/', admin.site.urls),
     path('problems/', include('quizzes.urls', namespace='quizzes')),
+    path('announce/', include('announcements.urls', namespace='announcements')),
     # path('signup/', views.SignUpView.as_view(), name='signup'),
     # path('signin/', views.SignInView.as_view(), name='signin'),
     # path('signout/', auth_view.LogoutView.as_view(), name='signout'),

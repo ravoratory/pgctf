@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load sass_tags %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'sites/home.scss' %}">
+
+<main>
+    <div class="lp">
+        <h1>PG-CTF</h1>
+        <p>うぇるかむかもーん!</p>
+        <p>各問題から<span>`pgctf{\w+}`</span>形式のflagを見つけてください</p>
+        <p>点数は多くの人が解いた問題ほど低くなるようになっています</p>
+        <p>指定された場所以外への攻撃はしないでください</p>
+    </div>
+
+    <div class="content">
+        <p>Problems</p>
+        <table class="problems">
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Level</th>
+                <th>Points</th>
+                <th>Winners</th>
+                <th>Solved</th>
+            </tr>
+            {% for quiz in quizzes %}
+            <tr>
+                <td>{{ quiz.quiz_number }}</td>
+                <td><a href="{% url 'quizzes:quiz' quiz.quiz_number %}">{{ quiz.title }}</a> {% if quiz.published == False %}[Draft]{% endif %}</td>
+                <td>{{ quiz.category | default:" " }}</td>
+                <td>{{ quiz.difficulty }}</td>
+                <td>{{ quiz.point }}</td>
+                <td>{{ quiz.winners }}</td>
+                <td>
+                    {% if quiz.is_solved %}OK{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</main>
+{% endblock %}

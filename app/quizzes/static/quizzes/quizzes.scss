@@ -1,0 +1,56 @@
+main {
+    max-width: 1000px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 2rem;
+
+    .lp {
+        background-color: #eee;
+        border-radius: .5rem;
+        padding: .1em 2rem;
+        margin: 1rem 0;
+
+        span {
+            color: mediumvioletred;
+        }
+    }
+
+    .content {
+        p {
+            font-size: 1.5rem;
+            font-weight: bolder;
+            margin: 1rem 0;
+            padding: .5em 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .problems {
+            border-collapse: collapse;
+            width: 100%;
+
+            a, a:visited {
+                color: #0000cc;
+            }
+
+            tr:first-child {
+                border-bottom: 1px solid black;
+            }
+            tr {
+                border-bottom: 1px solid #ddd;
+            }
+            tr:nth-child(n+2):hover {
+                background-color: #eee;
+            }
+
+            th, td{
+                text-align: left;
+                padding: .5rem;
+                width: 5%;
+            }
+
+            th:nth-child(2) {
+                width: 50%;
+            }
+        }
+    }
+}

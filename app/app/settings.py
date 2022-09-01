@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'quizzes.apps.QuizzesConfig',
     'problems.apps.ProblemsConfig',
+    'announcements.apps.AnnouncementsConfig',
 
     # 3rd party
     'sass_processor',
