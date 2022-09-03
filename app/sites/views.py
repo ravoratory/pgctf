@@ -2,7 +2,7 @@ import json
 
 from django.contrib.auth import get_user_model
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import F, Max, Sum
+from django.db.models import F, Max, Sum, When, Case
 from django.db.models.expressions import Window
 from django.db.models.functions import Rank
 from django.http.response import HttpResponse
@@ -24,8 +24,7 @@ def ranking_page(request, *args, **kwargs):
     ranking = (User.objects
         .filter(is_active=True, is_staff=False)
         .prefetch_related('solved')
-        .filter(solved__solved_datetime__lt=datetime(2022, 9, 10))
-        .annotate(points=Sum('solved__quiz__point'))
+        .annotate(points=Sum(Case(When(solved__solved_datetime__lt=datetime(2022,9,4),then='solved__quiz__point'))))
         .annotate(rank=Window(
             expression=Rank(),
             order_by=F('points').desc(nulls_last=True),
@@ -34,7 +33,7 @@ def ranking_page(request, *args, **kwargs):
         .values('rank', 'username', 'points', 'last_solve')
         .order_by('rank', 'last_solve')
     )
-
+    print(ranking)
     return render(request, 'sites/ranking.html', {'user': user, 'ranking': ranking})
 
 
@@ -45,7 +44,7 @@ def ranking_chart(request, *args, **kwargs):
     ranking = (User.objects
         .filter(is_active=True, is_staff=False)
         .prefetch_related('solved')
-        .filter(solved__solved_datetime__lt=datetime(2022, 9, 10), solved__is_null=True)
+        .filter(solved__solved_datetime__lt=datetime(2022, 9, 10))
         .annotate(points=Sum('solved__quiz__point'))
         .annotate(rank=Window(
             expression=Rank(),
