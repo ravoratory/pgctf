@@ -34,6 +34,7 @@ const ranking_data = get_data(url).then((data) => {
           tension: 0,
         },
       },
+      locale: "ja-JP",
       scales: {
         yAxes: [
           {

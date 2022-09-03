@@ -14,7 +14,4 @@ class AnnouncementsView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         context['main'] = Main.objects.first()
-        user = self.request.user
-        user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
-        context['user'] = user
         return context
