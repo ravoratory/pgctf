@@ -24,7 +24,7 @@ def ranking_page(request, *args, **kwargs):
     ranking = (User.objects
         .filter(is_active=True, is_staff=False)
         .prefetch_related('solved')
-        .annotate(points=Sum(Case(When(solved__solved_datetime__lt=datetime(2022,9,4),then='solved__quiz__point'))))
+        .annotate(points=Sum(Case(When(solved__solved_datetime__lt=datetime(2022, 9, 10), then='solved__quiz__point'))))
         .annotate(rank=Window(
             expression=Rank(),
             order_by=F('points').desc(nulls_last=True),
