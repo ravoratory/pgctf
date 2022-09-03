@@ -1,40 +1,37 @@
 import json
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import F, Max, Sum, When, Case
 from django.db.models.expressions import Window
 from django.db.models.functions import Rank
 from django.http.response import HttpResponse
-from django.shortcuts import render
 from django.views.decorators.http import require_GET
+from django.views import generic
 from datetime import datetime
 
+from common.views import UserContextMixin
 from quizzes.models import Solved
+from users.models import User
 
-User = get_user_model()
 
+class RankingView(UserContextMixin, LoginRequiredMixin, generic.ListView):
+    template_name = 'sites/ranking.html'
+    context_object_name = 'ranking'
 
-@require_GET
-def ranking_page(request, *args, **kwargs):
-    user = request.user
-    if user.is_authenticated:
-        user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
-
-    ranking = (User.objects
-        .filter(is_active=True, is_staff=False)
-        .prefetch_related('solved')
-        .annotate(points=Sum(Case(When(solved__solved_datetime__lt=datetime(2022, 9, 10), then='solved__quiz__point'))))
-        .annotate(rank=Window(
-            expression=Rank(),
-            order_by=F('points').desc(nulls_last=True),
-        ))
-        .annotate(last_solve=Max('solved__solved_datetime'))
-        .values('rank', 'username', 'points', 'last_solve')
-        .order_by('rank', 'last_solve')
-    )
-    print(ranking)
-    return render(request, 'sites/ranking.html', {'user': user, 'ranking': ranking})
+    def get_queryset(self):
+        return (User.objects
+            .filter(is_active=True, is_staff=False)
+            .prefetch_related('solved')
+            .annotate(points=Sum(Case(When(solved__solved_datetime__lt=datetime(2022, 9, 10), then='solved__quiz__point'))))
+            .annotate(rank=Window(
+                expression=Rank(),
+                order_by=F('points').desc(nulls_last=True),
+            ))
+            .annotate(last_solve=Max('solved__solved_datetime'))
+            .values('rank', 'username', 'points', 'last_solve')
+            .order_by('rank', 'last_solve')
+        )
 
 
 @require_GET

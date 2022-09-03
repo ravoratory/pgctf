@@ -1,12 +1,10 @@
-from email.mime import base
-import re
+import base64
+import json
+import os
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_http_methods
 from django.http import HttpRequest
-import os
-import base64
-import json
 
 
 @login_required
@@ -18,13 +16,14 @@ def only_limited_host(request: HttpRequest):
     else:
         return render(request, 'problems/error.html')
 
+
 @login_required
 @require_http_methods(['GET', 'POST'])
 def check_admin(request: HttpRequest):
     admin_cookie = request.COOKIES.get("exc")
     try:
         decoded_cookie = json.loads(base64.b64decode(admin_cookie).decode('utf-8'))
-    except:
+    except Exception:
         decoded_cookie = {'admin': False}
     is_admin = decoded_cookie['admin']
     if request.method == 'POST':
@@ -37,4 +36,5 @@ def check_admin(request: HttpRequest):
         message = os.getenv('FLAG_EXC')
     else:
         message = {'message': 'please login any account.'}
+
     return render(request, 'problems/exc.html', {'message': str(message)})

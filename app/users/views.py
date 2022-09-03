@@ -1,21 +1,21 @@
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
-from django.db.models import Sum
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import CreateView
 
 from .forms import SignUpForm
 from .models import User
+from common.views import UserContextMixin
 from quizzes.models import Solved
 
 
 class SignUpView(CreateView):
     form_class = SignUpForm
-    template_name = "users/signup.html"
     success_url = reverse_lazy('sites:home')
+    template_name = "users/signup.html"
 
     def form_valid(self, form):
         user = form.save()
@@ -24,26 +24,20 @@ class SignUpView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class SignInView(generic.View):
-    def post(self, request, *arg, **kwargs):
-        form = AuthenticationForm(data=request.POST)
-        if not form.is_valid():
-            return render(request, 'users/signin.html', {'form': form})
+class SignInView(UserContextMixin, generic.FormView):
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('sites:home')
+    template_name = 'users/signin.html'
+
+    def form_valid(self, form):
         username = form.cleaned_data.get('username')
         user = User.objects.get(username=username)
-        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-        return redirect('/')
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
 
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        if user.is_authenticated:
-            user.points = Solved.objects.filter(user=user, quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
-
-        form = AuthenticationForm(request.POST)
-        return render(request, 'users/signin.html', {'form': form, 'user': request.user})
+        return super().form_valid(form)
 
 
-class UserDetailView(generic.DetailView):
+class UserDetailView(UserContextMixin, LoginRequiredMixin, generic.DetailView):
     model = User
     template_name = "users/profile.html"
     slug_url_kwarg = 'username'
@@ -51,12 +45,8 @@ class UserDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user'] = self.request.user
         context['detail_user'] = self.object
-        context['detail_user'].points = Solved.objects.filter(user=context['detail_user'], quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
+        context['detail_user'].points = context["detail_user"].total_score()
         context['solved'] = Solved.objects.filter(user=self.object).select_related('quiz')
-
-        if self.request.user.is_authenticated:
-            context['user'].points = Solved.objects.filter(user=context['user'], quiz__published=True).aggregate(points=Sum('quiz__point'))['points'] or 0
 
         return context

@@ -1,11 +1,13 @@
 import uuid as uuid_lib
 
-from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
-                                        PermissionsMixin, UserManager)
+from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
 from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
 from django.utils.deconstruct import deconstructible
+
+from quizzes.models import Solved
 
 
 @deconstructible
@@ -62,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email',]
+    REQUIRED_FIELDS = ['email']
 
     is_staff = models.BooleanField(
         default=False,
@@ -85,3 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.username
+
+    def total_score(self):
+        score = Solved.objects.filter(user=self, quiz__published=True).aggregate(points=Sum('quiz__point'))['points']
+        return score or 0

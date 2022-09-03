@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import os
-from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -49,12 +48,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # all auth
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    
+
     # pgrit login
     'pgrit'
 ]
@@ -174,7 +173,7 @@ LOGOUT_REDIRECT_URL = '/signin/'
 SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
     'PGrit': {
-        'APP':{
+        'APP': {
             'client_id': os.getenv('CLIENT_ID', 'clientid'),
             'secret': os.getenv('CLIENT_SECRET', 'secret')
         },
