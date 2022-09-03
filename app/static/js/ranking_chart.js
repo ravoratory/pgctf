@@ -27,6 +27,7 @@ const ranking_data = get_data(url).then((data) => {
     data: {
       labels: data.datetime,
       datasets: create_dataset(data),
+      locale: "ja-JP",
     },
     options: {
       elements: {
@@ -34,7 +35,6 @@ const ranking_data = get_data(url).then((data) => {
           tension: 0,
         },
       },
-      locale: "ja-JP",
       scales: {
         yAxes: [
           {
