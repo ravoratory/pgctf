@@ -40,7 +40,7 @@ def quiz_create_receiver(sender, instance, created, **kwargs):
     discord_webhook_sender(payload, webhook_system_notify_url)
 
     if instance.published:
-        Announcement.objects.create(title="問題追加", body=f"{instance.quiz_number}を追加しました。")
+        Announcement.objects.create(title="問題追加", body=f"{instance.quiz_number}を追加しました")
 
 
 @receiver(post_save, sender=Solved)
