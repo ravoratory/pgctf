@@ -45,7 +45,7 @@ def ranking_chart(request, *args, **kwargs):
     ranking = (User.objects
         .filter(is_active=True, is_staff=False)
         .prefetch_related('solved')
-        .filter(solved__solved_datetime__lt=datetime(2022, 9, 10))
+        .filter(solved__solved_datetime__lt=datetime(2022, 9, 10), solved_is_null=True)
         .annotate(points=Sum('solved__quiz__point'))
         .annotate(rank=Window(
             expression=Rank(),
