@@ -8,6 +8,7 @@ from django.db.models.functions import Rank
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
+from datetime import datetime
 
 from quizzes.models import Solved
 
@@ -23,6 +24,7 @@ def ranking_page(request, *args, **kwargs):
     ranking = (User.objects
         .filter(is_active=True, is_staff=False)
         .prefetch_related('solved')
+        .filter(solved__created_at__lt=datetime(2022, 9, 10))
         .annotate(points=Sum('solved__quiz__point'))
         .annotate(rank=Window(
             expression=Rank(),
@@ -43,6 +45,7 @@ def ranking_chart(request, *args, **kwargs):
     ranking = (User.objects
         .filter(is_active=True, is_staff=False)
         .prefetch_related('solved')
+        .filter(solved__created_at__lt=datetime(2022, 9, 10))
         .annotate(points=Sum('solved__quiz__point'))
         .annotate(rank=Window(
             expression=Rank(),
