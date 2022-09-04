@@ -26,12 +26,12 @@ def discord_webhook_sender(payload, webhook_url):
 @receiver(post_save, sender=Quiz)
 def quiz_create_receiver(sender, instance, created, **kwargs):
     if not created:
-        if "published" in (kwargs["update_fields"] or []):
-            return
-        if instance.published:
-            Announcement.objects.create(title="問題公開", body=f"{instance.quiz_number}を公開しました")
-        else:
-            Announcement.objects.create(title="問題非公開", body=f"{instance.quiz_number}を非公開にしました")
+        # if "published" not in (kwargs["update_fields"] or []):
+        #     return
+        # if instance.published:
+        #     Announcement.objects.create(title="問題公開", body=f"{instance.quiz_number}を公開しました")
+        # else:
+        #     Announcement.objects.create(title="問題非公開", body=f"{instance.quiz_number}を非公開にしました")
 
         return
 
