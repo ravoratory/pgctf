@@ -15,5 +15,5 @@ class UserAdmin(UserAdmin):
         ('日付', {'fields': ('last_login', 'date_joined')}),
     )
     readonly_fields = ('date_joined',)
-    list_display = ('username', 'email', 'is_staff')
-    search_fields = ('username', 'email')
+    list_display = ('username', 'is_staff', 'last_login', 'date_joined')
+    search_fields = ('username',)
