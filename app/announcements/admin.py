@@ -4,8 +4,8 @@ from . import models
 
 
 class AnnouncementAdmin(admin.ModelAdmin):
-    list_display = ['title', 'created_at']
-    search_fields = ['title']
+    list_display = ["title", "created_at"]
+    search_fields = ["title"]
 
 
 admin.site.register(models.Main)

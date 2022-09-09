@@ -1,4 +1,5 @@
 from typing import Optional
+
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count, F, Q
 from django.db.models.expressions import Window
@@ -11,7 +12,6 @@ from .forms import CheckFlagForm
 from .models import Quiz, QuizAppendedUrl, QuizFile, Solved
 from common.views import UserContextMixin
 from configurations.models import Configuration
-
 
 QUIZ_STATUS_COLLECT = 1
 QUIZ_STATUS_INVALID = 2

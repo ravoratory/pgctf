@@ -1,6 +1,7 @@
 from math import ceil
+
 from allauth.account.signals import user_signed_up
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
 from quizzes.models import Quiz, Solved
@@ -12,7 +13,7 @@ minimum: int = 50  # 閾値を超えた際の点数
 
 
 def recalculate_quiz_score(quiz_id=None):
-    quizzes: list[Quiz] = Quiz.objects.filter(published=True).prefetch_related('solved_users')
+    quizzes: list[Quiz] = Quiz.objects.filter(published=True).prefetch_related("solved_users")
     if quiz_id is not None:
         quizzes = quizzes.filter(id=quiz_id)
 

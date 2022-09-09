@@ -14,11 +14,11 @@ class FlagValidator(RegexValidator):
 class QuizCategory(models.Model):
     name = models.CharField("Category", max_length=30, unique=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name_plural = "Quiz categories"
+
+    def __str__(self):
+        return self.name
 
 
 class QuizFile(models.Model):
@@ -27,12 +27,12 @@ class QuizFile(models.Model):
     uploaded_at = models.DateTimeField(default=timezone.now, editable=False)
     updated_at = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return self.title
+
     @property
     def filename(self):
         return os.path.basename(self.file.name)
-
-    def __str__(self):
-        return self.title
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -75,8 +75,8 @@ class Quiz(models.Model):
         unique=True,
     )
 
-    difficulty = models.IntegerField("Difficulty")
-    point = models.IntegerField("Point")
+    difficulty = models.PositiveIntegerField("Difficulty")
+    point = models.PositiveIntegerField("Point")
 
     author = models.CharField("Author", max_length=100, blank=True, null=True)
 
@@ -93,11 +93,11 @@ class Quiz(models.Model):
 
     is_extra = models.BooleanField("Is extra", default=False)
 
-    def __str__(self):
-        return f"{self.number}: {self.title}"
-
     class Meta:
         verbose_name_plural = "Quizzes"
+
+    def __str__(self):
+        return f"{self.number}: {self.title}"
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -112,12 +112,12 @@ class Solved(models.Model):
 
     solved_at = models.DateTimeField("Solved date", editable=False)
 
-    def __str__(self):
-        return f"{self.quiz.number}: {self.user.username} [{self.solved_at}]"
-
     class Meta:
         verbose_name = "Solved user"
         verbose_name_plural = "Solved users"
+
+    def __str__(self):
+        return f"{self.quiz.number}: {self.user.username} [{self.solved_at}]"
 
     def save(self, *args, **kwargs):
         if not self.id:

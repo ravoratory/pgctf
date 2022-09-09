@@ -12,9 +12,9 @@ class PGritAPI(OAuth2Client):
 
 class PGritOAuth2Adapter(OAuth2Adapter):
     provider_id = PGritProvider.id
-    access_token_url = 'https://community.4nonome.com/oauth/token'
-    authorize_url = 'https://community.4nonome.com/oauth/authorize'
-    profile_url = 'https://community.4nonome.com/api/v1/accounts/verify_credentials'
+    access_token_url = "https://community.4nonome.com/oauth/token"
+    authorize_url = "https://community.4nonome.com/oauth/authorize"
+    profile_url = "https://community.4nonome.com/api/v1/accounts/verify_credentials"
     client_class = PGritAPI
 
     def parse_token(self, data):
@@ -27,10 +27,7 @@ class PGritOAuth2Adapter(OAuth2Adapter):
         return token
 
     def complete_login(self, request, app, token, **kwargs):
-        res = requests.get(
-            self.profile_url,
-            headers={'Authorization': 'Bearer ' + token.token}
-        )
+        res = requests.get(self.profile_url, headers={"Authorization": "Bearer " + token.token})
         extra_data = res.json()
 
         return self.get_provider().sociallogin_from_response(request, extra_data)

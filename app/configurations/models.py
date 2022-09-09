@@ -5,7 +5,7 @@ from django.db.models.functions import Cast
 
 
 class Configuration(models.Model):
-    field = models.CharField(max_length=100)
+    field = models.CharField(max_length=100, unique=True)
     value = models.CharField(max_length=100)
     description = models.TextField()
 
@@ -95,5 +95,5 @@ class Configuration(models.Model):
 
 
 def create_default_configuration(sender, **kwargs):
-    for field, value, description in settings.DEFAULT_GAME_CONFIGURATIONS:
-        Configuration.objects.get_or_create(field=field, value=value, description=description)
+    for field, *_ in settings.DEFAULT_GAME_CONFIGURATIONS:
+        Configuration.objects.get_or_create(field=field)

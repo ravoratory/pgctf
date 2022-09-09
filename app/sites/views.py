@@ -1,21 +1,21 @@
 import json
+from datetime import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import F, Max, Sum, When, Case
+from django.db.models import Case, F, Max, Sum, When
 from django.db.models.expressions import Window
 from django.db.models.functions import Rank
 from django.http.response import HttpResponse
 from django.views.decorators.http import require_GET
-from django.views import generic
-from datetime import datetime
+from django.views.generic import ListView
 
 from common.views import UserContextMixin
 from quizzes.models import Solved
 from users.models import User
 
 
-class RankingView(UserContextMixin, LoginRequiredMixin, generic.ListView):
+class RankingView(UserContextMixin, LoginRequiredMixin, ListView):
     template_name = "sites/ranking.html"
     context_object_name = "ranking"
 
