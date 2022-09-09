@@ -14,9 +14,7 @@ webhook_solved_notify_url = settings.DISCORD_WEBHOOK_SOLVED_NOTIFY_URL
 
 
 def discord_webhook_sender(payload, webhook_url):
-    headers = {
-        'Content-Type': 'application/json'
-    }
+    headers = {"Content-Type": "application/json"}
 
     response = requests.post(webhook_url, data=json.dumps(payload), headers=headers)
 
@@ -30,17 +28,21 @@ def quiz_create_receiver(sender, instance, created, **kwargs):
 
     payload = {
         "content": ":question: New quiz created!",
-        "embeds": [{
-            "fields": [{
-                "name": f"{instance.quiz_number}: [{instance.category.category_name}]",
-                "value": instance.title,
-            }]
-        }],
+        "embeds": [
+            {
+                "fields": [
+                    {
+                        "name": f"{instance.number}: [{instance.category.name}]",
+                        "value": instance.title,
+                    }
+                ]
+            }
+        ],
     }
     discord_webhook_sender(payload, webhook_system_notify_url)
 
     if instance.published:
-        Announcement.objects.create(title="問題公開", body=f"{instance.quiz_number}を公開しました")
+        Announcement.objects.create(title="問題公開", body=f"{instance.number}を公開しました")
 
 
 @receiver(post_save, sender=Solved)
@@ -49,7 +51,7 @@ def quiz_solved_receiver(sender, instance, created, **kwargs):
         return
 
     payload = {
-        "content": f":partying_face: {instance.user.username} solved {instance.quiz.quiz_number}: {instance.quiz.title}"
+        "content": f":partying_face: {instance.user.username} solved {instance.quiz.number}: {instance.quiz.title}"
     }
     discord_webhook_sender(payload, webhook_solved_notify_url)
 
@@ -61,12 +63,16 @@ def announcement_create_receiver(sender, instance, created, **kwargs):
 
     payload = {
         "content": ":microphone: New announcement created!",
-        "embeds": [{
-            "fields": [{
-                "name": instance.title,
-                "value": instance.body,
-            }]
-        }],
+        "embeds": [
+            {
+                "fields": [
+                    {
+                        "name": instance.title,
+                        "value": instance.body,
+                    }
+                ]
+            }
+        ],
     }
     discord_webhook_sender(payload, webhook_system_notify_url)
 
@@ -76,7 +82,5 @@ def user_register_receiver(sender, instance, created, **kwargs):
     if not created:
         return
 
-    payload = {
-        "content": f":tada: @{instance.username} has been registered!"
-    }
+    payload = {"content": f":tada: @{instance.username} has been registered!"}
     discord_webhook_sender(payload, webhook_system_notify_url)

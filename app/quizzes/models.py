@@ -12,10 +12,10 @@ class FlagValidator(RegexValidator):
 
 
 class QuizCategory(models.Model):
-    category_name = models.CharField("Category", max_length=30, unique=True)
+    name = models.CharField("Category", max_length=30, unique=True)
 
     def __str__(self):
-        return self.category_name
+        return self.name
 
     class Meta:
         verbose_name_plural = "Quiz categories"
@@ -59,7 +59,7 @@ class QuizAppendedUrl(models.Model):
 
 
 class Quiz(models.Model):
-    quiz_number = models.CharField("Quiz number", max_length=100, unique=True)
+    number = models.CharField("Quiz number", max_length=100, unique=True)
 
     title = models.CharField("Quiz Title", max_length=100, unique=True)
     statement = models.TextField("Quiz Statement", blank=True, null=True)
@@ -82,7 +82,7 @@ class Quiz(models.Model):
 
     solved_users = models.ManyToManyField(
         "users.User",
-        related_name="solved_quiz",
+        related_name="solved_quizzes",
         through="Solved",
     )
 
@@ -94,7 +94,7 @@ class Quiz(models.Model):
     is_extra = models.BooleanField("Is extra", default=False)
 
     def __str__(self):
-        return f"{self.quiz_number}: {self.title}"
+        return f"{self.number}: {self.title}"
 
     class Meta:
         verbose_name_plural = "Quizzes"
@@ -110,10 +110,10 @@ class Solved(models.Model):
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE)
 
-    solved_datetime = models.DateTimeField("Solved date", editable=False)
+    solved_at = models.DateTimeField("Solved date", editable=False)
 
     def __str__(self):
-        return f"{self.quiz.quiz_number}: {self.user.username} [{self.solved_datetime}]"
+        return f"{self.quiz.number}: {self.user.username} [{self.solved_at}]"
 
     class Meta:
         verbose_name = "Solved user"
@@ -121,5 +121,5 @@ class Solved(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.solved_datetime = timezone.now()
+            self.solved_at = timezone.now()
         return super().save(*args, **kwargs)

@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load sass_tags %}
 
-{% block title %}{{ quiz.quiz_number}} [{{quiz.category}}] - PG-CTF{% endblock %}
+{% block title %}{{ quiz.number}} [{{quiz.category}}] - PG-CTF{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% sass_src 'quizzes/quiz.scss' %}">
 
 <main>
     <div class="quiz-title">
-        <h1>{{quiz.quiz_number}} [{{ quiz.category }}] {{ quiz.title }} {% if quiz.published == False %}--Draft--{% endif %}</h1>
+        <h1>{{quiz.number}} [{{ quiz.category }}] {{ quiz.title }} {% if quiz.published == False %}--Draft--{% endif %}</h1>
         <p>Level: {{ quiz.difficulty }}, Point: {{ quiz.point }}{% if quiz.author %}, Author: {{ quiz.author }}{% endif %}</p>
     </div>
     <div class="statement">
@@ -41,7 +41,7 @@
     {% endif %}
     {% if quiz.status != 1 %}
     <div class="flag-form">
-        <form method="POST" action="{% url 'quizzes:quiz' quiz.quiz_number %}">
+        <form method="POST" action="{% url 'quizzes:quiz' quiz.number %}">
             {% csrf_token %}
             {{ form.flag }}
             <button>Submit</button>
@@ -64,7 +64,7 @@
         {% endif %}
             <td>{{ rank.rank }}</td>
             <td><a href="{% url 'users:profile' rank.username %}">{{ rank.username }}</a></td>
-            <td>{{ rank.solved_datetime | date:"Y-m-d H:i:s"}}</td>
+            <td>{{ rank.solved_at | date:"Y-m-d H:i:s"}}</td>
         </tr>
         {% endfor %}
     </table>

@@ -30,7 +30,7 @@ class QuizListView(UserContextMixin, LoginRequiredMixin, UserPassesTestMixin, ge
         quizzes = (
             Quiz.objects.filter(is_extra=is_extra)
             .select_related("category")
-            .order_by("quiz_number")
+            .order_by("number")
             .annotate(is_solved=Count("solved_users", filter=Q(solved__user=self.request.user)))
             .annotate(winners=Count("solved_users", filter=Q(solved__user__is_staff=False)))
         )
@@ -62,10 +62,10 @@ class QuizView(UserContextMixin, LoginRequiredMixin, UserPassesTestMixin, generi
     def get_success_url(self) -> str:
         return self.request.path
 
-    def get_quiz_or_404(self, quiz_number):
+    def get_quiz_or_404(self, number):
         quiz = get_object_or_404(
             Quiz.objects.select_related("category"),
-            quiz_number=quiz_number,
+            number=number,
         )
         if not quiz.published and not self.request.user.is_staff:
             raise Http404
@@ -79,18 +79,18 @@ class QuizView(UserContextMixin, LoginRequiredMixin, UserPassesTestMixin, generi
             .annotate(
                 rank=Window(
                     expression=Rank(),
-                    order_by=F("solved_datetime").asc(),
+                    order_by=F("solved_at").asc(),
                 )
             )
             .annotate(username=F("user__username"))
-            .values("username", "solved_datetime", "rank")
+            .values("username", "solved_at", "rank")
             .order_by("rank", "username")
         )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        quiz = self.get_quiz_or_404(self.kwargs.get("quiz_number"))
+        quiz = self.get_quiz_or_404(self.kwargs.get("number"))
         if Solved.objects.filter(user=self.request.user, quiz=quiz).exists():
             quiz.status = QUIZ_STATUS_COLLECT
         elif (flag := context["form"].data.get("flag")) and flag != quiz.flag:
@@ -104,7 +104,7 @@ class QuizView(UserContextMixin, LoginRequiredMixin, UserPassesTestMixin, generi
         return context
 
     def form_valid(self, form):
-        quiz = self.get_quiz_or_404(self.kwargs.get("quiz_number"))
+        quiz = self.get_quiz_or_404(self.kwargs.get("number"))
         if form.data["flag"] == quiz.flag:
             Solved.objects.get_or_create(user=self.request.user, quiz=quiz)
 

@@ -23,16 +23,14 @@ class RankingView(UserContextMixin, LoginRequiredMixin, generic.ListView):
         return (
             User.objects.filter(is_active=True, is_staff=False)
             .prefetch_related("solved")
-            .annotate(
-                points=Sum(Case(When(solved__solved_datetime__lt=datetime(2022, 9, 10), then="solved__quiz__point")))
-            )
+            .annotate(points=Sum(Case(When(solved__solved_at__lt=datetime(2022, 9, 10), then="solved__quiz__point"))))
             .annotate(
                 rank=Window(
                     expression=Rank(),
                     order_by=F("points").desc(nulls_last=True),
                 )
             )
-            .annotate(last_solve=Max("solved__solved_datetime"))
+            .annotate(last_solve=Max("solved__solved_at"))
             .values("rank", "username", "points", "last_solve")
             .order_by("rank", "last_solve")
         )
@@ -45,7 +43,7 @@ def ranking_chart(request, *args, **kwargs):
     ranking = (
         User.objects.filter(is_active=True, is_staff=False)
         .prefetch_related("solved")
-        .filter(solved__solved_datetime__lt=datetime(2022, 9, 10))
+        .filter(solved__solved_at__lt=datetime(2022, 9, 10))
         .annotate(points=Sum("solved__quiz__point"))
         .annotate(
             rank=Window(
@@ -53,7 +51,7 @@ def ranking_chart(request, *args, **kwargs):
                 order_by=F("points").desc(nulls_last=True),
             )
         )
-        .annotate(last_solve=Max("solved__solved_datetime"))
+        .annotate(last_solve=Max("solved__solved_at"))
         .order_by("rank", "last_solve")
         .values("id")
     )[:limit]
@@ -62,8 +60,8 @@ def ranking_chart(request, *args, **kwargs):
         .annotate(date_joined=F("user__date_joined"))
         .annotate(username=F("user__username"))
         .annotate(point=F("quiz__point"))
-        .values("username", "point", "solved_datetime", "date_joined")
-        .order_by("solved_datetime")
+        .values("username", "point", "solved_at", "date_joined")
+        .order_by("solved_at")
     )
 
     users = {}
@@ -85,7 +83,7 @@ def ranking_chart(request, *args, **kwargs):
 
         times.append(
             {
-                "time": record["solved_datetime"],
+                "time": record["solved_at"],
                 "username": record["username"],
                 "point": record["point"] + point,
             }
