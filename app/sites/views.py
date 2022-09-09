@@ -16,79 +16,90 @@ from users.models import User
 
 
 class RankingView(UserContextMixin, LoginRequiredMixin, generic.ListView):
-    template_name = 'sites/ranking.html'
-    context_object_name = 'ranking'
+    template_name = "sites/ranking.html"
+    context_object_name = "ranking"
 
     def get_queryset(self):
-        return (User.objects
-            .filter(is_active=True, is_staff=False)
-            .prefetch_related('solved')
-            .annotate(points=Sum(Case(When(solved__solved_datetime__lt=datetime(2022, 9, 10), then='solved__quiz__point'))))
-            .annotate(rank=Window(
-                expression=Rank(),
-                order_by=F('points').desc(nulls_last=True),
-            ))
-            .annotate(last_solve=Max('solved__solved_datetime'))
-            .values('rank', 'username', 'points', 'last_solve')
-            .order_by('rank', 'last_solve')
+        return (
+            User.objects.filter(is_active=True, is_staff=False)
+            .prefetch_related("solved")
+            .annotate(
+                points=Sum(Case(When(solved__solved_datetime__lt=datetime(2022, 9, 10), then="solved__quiz__point")))
+            )
+            .annotate(
+                rank=Window(
+                    expression=Rank(),
+                    order_by=F("points").desc(nulls_last=True),
+                )
+            )
+            .annotate(last_solve=Max("solved__solved_datetime"))
+            .values("rank", "username", "points", "last_solve")
+            .order_by("rank", "last_solve")
         )
 
 
 @require_GET
 def ranking_chart(request, *args, **kwargs):
-    limit = request.GET.get('limit', 10)
+    limit = request.GET.get("limit", 10)
 
-    ranking = (User.objects
-        .filter(is_active=True, is_staff=False)
-        .prefetch_related('solved')
+    ranking = (
+        User.objects.filter(is_active=True, is_staff=False)
+        .prefetch_related("solved")
         .filter(solved__solved_datetime__lt=datetime(2022, 9, 10))
-        .annotate(points=Sum('solved__quiz__point'))
-        .annotate(rank=Window(
-            expression=Rank(),
-            order_by=F('points').desc(nulls_last=True),
-        ))
-        .annotate(last_solve=Max('solved__solved_datetime'))
-        .order_by('rank', 'last_solve')
-        .values('id')
+        .annotate(points=Sum("solved__quiz__point"))
+        .annotate(
+            rank=Window(
+                expression=Rank(),
+                order_by=F("points").desc(nulls_last=True),
+            )
+        )
+        .annotate(last_solve=Max("solved__solved_datetime"))
+        .order_by("rank", "last_solve")
+        .values("id")
     )[:limit]
-    solved = (Solved.objects.filter(user__in=ranking)
-        .annotate(date_joined=F('user__date_joined'))
-        .annotate(username=F('user__username'))
-        .annotate(point=F('quiz__point'))
-        .values('username', 'point', 'solved_datetime', 'date_joined')
-        .order_by('solved_datetime')
+    solved = (
+        Solved.objects.filter(user__in=ranking)
+        .annotate(date_joined=F("user__date_joined"))
+        .annotate(username=F("user__username"))
+        .annotate(point=F("quiz__point"))
+        .values("username", "point", "solved_datetime", "date_joined")
+        .order_by("solved_datetime")
     )
 
     users = {}
     times = []
     for record in solved:
-        if users.get(record['username']) is None:
-            users[record['username']] = []
-            times.append({
-                'time': record['date_joined'],
-                'username': record['username'],
-                'point': 0,
-            })
+        if users.get(record["username"]) is None:
+            users[record["username"]] = []
+            times.append(
+                {
+                    "time": record["date_joined"],
+                    "username": record["username"],
+                    "point": 0,
+                }
+            )
 
         for t in times:
-            if t['username'] == record['username']:
-                point = t['point']
+            if t["username"] == record["username"]:
+                point = t["point"]
 
-        times.append({
-            'time': record['solved_datetime'],
-            'username': record['username'],
-            'point': record['point'] + point,
-        })
-    times.sort(key=lambda k: k['time'])
+        times.append(
+            {
+                "time": record["solved_datetime"],
+                "username": record["username"],
+                "point": record["point"] + point,
+            }
+        )
+    times.sort(key=lambda k: k["time"])
 
-    response = {'datetime': [], 'points': users, 'usernames': list(users.keys())}
+    response = {"datetime": [], "points": users, "usernames": list(users.keys())}
     for time in times:
-        response['datetime'].append(time['time'])
+        response["datetime"].append(time["time"])
         for u in users.keys():
-            if u == time['username']:
-                response['points'][u].append(time['point'])
+            if u == time["username"]:
+                response["points"][u].append(time["point"])
             else:
-                response['points'][u].append('NaN')
+                response["points"][u].append("NaN")
 
     response = json.dumps(response, cls=DjangoJSONEncoder)
-    return HttpResponse(response, content_type='application/json')
+    return HttpResponse(response, content_type="application/json")

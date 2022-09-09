@@ -20,3 +20,10 @@
         </div>
     </div>
 </nav>
+{% if not ongoing or paused %}
+<nav class="game-status">
+    <div class="container">
+        Game is {% if not ongoing %}stopping{% else %}paused{% endif %}
+    </div>
+</nav>
+{% endif %}

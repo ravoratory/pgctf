@@ -8,6 +8,6 @@ class UserContextMixin:
             user.points = user.total_score()
 
         context = super().get_context_data(**kwargs)
-        context['user'] = self.request.user
+        context["user"] = self.request.user
 
         return context
