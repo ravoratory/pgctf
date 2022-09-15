@@ -20,4 +20,15 @@
         "--line-length",
         "120",
     ],
+    "isort.args": [
+        // "--config", "../.isort.cfg"
+    ],
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "search.showLineNumbers": true,
+    "editor.renderWhitespace": "trailing",
+    "explorer.incrementalNaming": "smart",
+    "workbench.startupEditor": "readme"
 }

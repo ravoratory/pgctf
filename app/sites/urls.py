@@ -1,8 +1,8 @@
 from django.urls import path
 
-from . import views
 from quizzes.views import QuizListView
 
+from . import views
 
 app_name = "sites"
 urlpatterns = [

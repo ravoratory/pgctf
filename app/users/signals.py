@@ -1,33 +1,28 @@
-from math import ceil
+import math
 
-from allauth.account.signals import user_signed_up
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
+from configurations.models import Configuration
 from quizzes.models import Quiz, Solved
 from users.models import User
 
-initial: int = 500  # 初期の点数
-decay: int = 20  # 回答者数の閾値
-minimum: int = 50  # 閾値を超えた際の点数
-
 
 def recalculate_quiz_score(quiz_id=None):
+    min_score = Configuration.min_score()
+    max_score = Configuration.max_score()
+    winners_threshould = Configuration.winners_threshould()
+
     quizzes: list[Quiz] = Quiz.objects.filter(published=True).prefetch_related("solved_users")
     if quiz_id is not None:
         quizzes = quizzes.filter(id=quiz_id)
 
     for quiz in quizzes:
         solve_count: int = quiz.solved_users.filter(is_staff=False).count()
-        value = (((minimum - initial) / (decay**2)) * (solve_count**2)) + initial
-        value = ceil(value)
-        quiz.point = value if value > minimum else minimum
+        value = (((min_score - max_score) / (winners_threshould**2)) * (solve_count**2)) + max_score
+        value = math.ceil(value)
+        quiz.point = value if value > min_score else min_score
         quiz.save()
-
-
-@receiver(user_signed_up)
-def user_signed_up_callback(**kwargs):
-    recalculate_quiz_score()
 
 
 @receiver(post_delete, sender=User)
@@ -38,3 +33,9 @@ def user_deleted_callback(**kwargs):
 @receiver([post_save, post_delete], sender=Solved)
 def solved_post_delete_callback(sender, instance, **kwargs):
     recalculate_quiz_score(quiz_id=instance.quiz.id)
+
+
+@receiver(post_save, sender=Configuration)
+def score_changed_callback(sender, instance, **kwargs):
+    if instance.field in ("min_score", "max_score", "winners_threshould"):
+        recalculate_quiz_score()

@@ -6,7 +6,7 @@ from django.db.models.functions import Cast
 
 class Configuration(models.Model):
     field = models.CharField(max_length=100, unique=True)
-    value = models.CharField(max_length=100)
+    value = models.CharField(max_length=100, default="0")
     description = models.TextField()
 
     def __str__(self):
@@ -93,7 +93,37 @@ class Configuration(models.Model):
             .login
         )
 
+    @staticmethod
+    def max_score() -> int:
+        return (
+            Configuration.objects.filter(field="max_score")
+            .annotate(max_score=Cast("value", output_field=models.IntegerField()))
+            .first()
+            .max_score
+        )
+
+    @staticmethod
+    def min_score() -> int:
+        return (
+            Configuration.objects.filter(field="min_score")
+            .annotate(min_score=Cast("value", output_field=models.IntegerField()))
+            .first()
+            .min_score
+        )
+
+    @staticmethod
+    def winners_threshould() -> int:
+        return (
+            Configuration.objects.filter(field="winners_threshould")
+            .annotate(winners_threshould=Cast("value", output_field=models.IntegerField()))
+            .first()
+            .winners_threshould
+        )
+
 
 def create_default_configuration(sender, **kwargs):
-    for field, *_ in settings.DEFAULT_GAME_CONFIGURATIONS:
-        Configuration.objects.get_or_create(field=field)
+    for field, value, description in settings.DEFAULT_GAME_CONFIGURATIONS:
+        try:
+            Configuration.objects.get_or_create(field=field, value=value, description=description)
+        except Exception:
+            pass

@@ -2,7 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 
 from common.views import UserContextMixin
-from .models import Main, Announcement
+
+from .models import Announcement, Main
 
 
 class AnnouncementsView(UserContextMixin, LoginRequiredMixin, generic.ListView):

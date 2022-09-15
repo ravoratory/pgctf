@@ -191,6 +191,8 @@ DISCORD_WEBHOOK_SOLVED_NOTIFY_URL = os.getenv("DISCORD_WEBHOOK_SOLVED_NOTIFY_URL
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")
+AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "ap-northeast-1")
 
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
@@ -211,6 +213,7 @@ DEFAULT_GAME_CONFIGURATIONS = [
     GameConfiguration("update_score", "1", "(bool) 回答者の割合によって問題のスコアを更新するか"),
     GameConfiguration("min_score", "50", "(int) 問題のスコアの最小値"),
     GameConfiguration("max_score", "500", "(int) 問題のスコアの最大値"),
+    GameConfiguration("winners_threshould", "10", "(int) 超えるとスコアが最小になる正解者数"),
     GameConfiguration("default_bonus", "0", "(int) 問題のスコアのボーナス値"),
     GameConfiguration("default_penalty", "0", "(int) 問題のスコアのペナルティ値"),
     GameConfiguration("ranking", "1", "(bool) ランキングを更新するか"),

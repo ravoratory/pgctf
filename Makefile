@@ -22,7 +22,7 @@ clean:
 	docker system prune -af
 
 .PHONY: createsuperuser
-cs:
+createsuperuser:
 	docker compose exec web \
 	python manage.py createsuperuser --noinput
 
@@ -30,3 +30,14 @@ cs:
 db:
 	docker compose exec db \
 	psql -h 127.0.0.1 -p 5432 -U pg -W postgres
+
+.PHONY: lint
+check:
+	python -m flake8 app
+	python -m black --check app
+	python -m isort --check app
+
+.PHONY: format
+format:
+	python -m black app
+	python -m isort app

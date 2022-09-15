@@ -6,10 +6,11 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import CreateView
 
-from .forms import SignUpForm
-from .models import User
 from common.views import UserContextMixin
 from quizzes.models import Solved
+
+from .forms import SignUpForm
+from .models import User
 
 
 class SignUpView(CreateView):

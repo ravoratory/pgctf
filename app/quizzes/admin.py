@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from . import models
 from common.admin import DropdownFilter, RelatedDropdownFilter
+
+from . import models
 
 
 class QuizAdmin(admin.ModelAdmin):

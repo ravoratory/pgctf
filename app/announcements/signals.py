@@ -1,13 +1,15 @@
-import requests
 import json
+
+import requests
+
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import Announcement
 from quizzes.models import Quiz, Solved
 from users.models import User
 
+from .models import Announcement
 
 webhook_system_notify_url = settings.DISCORD_WEBHOOK_SYSTEM_NOTIFY_URL
 webhook_solved_notify_url = settings.DISCORD_WEBHOOK_SOLVED_NOTIFY_URL
@@ -62,7 +64,7 @@ def announcement_create_receiver(sender, instance, created, **kwargs):
         return
 
     payload = {
-        "content": ":microphone: New announcement created!",
+        "content": ":microphone: New announcement!",
         "embeds": [
             {
                 "fields": [

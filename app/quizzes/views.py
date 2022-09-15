@@ -8,10 +8,11 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views import generic
 
-from .forms import CheckFlagForm
-from .models import Quiz, QuizAppendedUrl, QuizFile, Solved
 from common.views import UserContextMixin
 from configurations.models import Configuration
+
+from .forms import CheckFlagForm
+from .models import Quiz, QuizAppendedUrl, QuizFile, Solved
 
 QUIZ_STATUS_COLLECT = 1
 QUIZ_STATUS_INVALID = 2
