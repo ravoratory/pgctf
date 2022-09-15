@@ -12,7 +12,7 @@ from common.views import UserContextMixin
 from configurations.models import Configuration
 
 from .forms import CheckFlagForm
-from .models import Quiz, QuizAppendedUrl, QuizFile, Solved
+from .models import Quiz, QuizAppendedUrl, QuizFile, Solved, SubmitLog
 
 QUIZ_STATUS_COLLECT = 1
 QUIZ_STATUS_INVALID = 2
@@ -28,6 +28,7 @@ class QuizListView(UserContextMixin, LoginRequiredMixin, UserPassesTestMixin, ge
         return Configuration.game_ongoing() or self.request.user.is_staff
 
     def get_quizzes(self, is_extra=False):
+        raise NotImplementedError
         quizzes = (
             Quiz.objects.filter(is_extra=is_extra)
             .select_related("category")
@@ -107,6 +108,9 @@ class QuizView(UserContextMixin, LoginRequiredMixin, UserPassesTestMixin, generi
     def form_valid(self, form):
         quiz = self.get_quiz_or_404(self.kwargs.get("number"))
         if form.data["flag"] == quiz.flag:
-            Solved.objects.get_or_create(user=self.request.user, quiz=quiz)
+            solved, _ = Solved.objects.get_or_create(user=self.request.user, quiz=quiz)
+            SubmitLog.objects.create(user=self.request.user, quiz=quiz, flag=form.data["flag"], solved=solved)
+        else:
+            SubmitLog.objects.create(user=self.request.user, quiz=quiz, flag=form.data["flag"])
 
         return self.render_to_response(self.get_context_data(form=form))

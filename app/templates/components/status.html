@@ -1,0 +1,7 @@
+{% if not ongoing or paused %}
+<nav class="game-status">
+    <div class="container">
+        Game is {% ongoing|yesno:'stopping,paused' %}
+    </div>
+</nav>
+{% endif %}

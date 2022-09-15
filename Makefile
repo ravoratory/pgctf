@@ -1,11 +1,15 @@
 SHELL = /bin/sh
 
-.PHONY: loc
-loc: build-loc
+.PHONY: setup
+setup:
+	cp example.env .env
+
+.PHONY: up
+up: build
 	docker compose up
 
-.PHONY: build-loc
-build-loc:
+.PHONY: build
+build:
 	docker compose build
 
 .PHONY: exec

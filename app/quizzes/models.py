@@ -123,3 +123,22 @@ class Solved(models.Model):
         if not self.id:
             self.solved_at = timezone.now()
         return super().save(*args, **kwargs)
+
+
+class SubmitLog(models.Model):
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+
+    solved = models.OneToOneField(Solved, on_delete=models.CASCADE, blank=True, null=True)
+
+    flag = models.CharField("Flag", max_length=100)
+
+    created_at = models.DateTimeField("Created at", editable=False)
+    updated_at = models.DateTimeField("Updated at")
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.created_at = timezone.now()
+        self.updated_at = timezone.now()
+
+        return super().save(*args, **kwargs)
