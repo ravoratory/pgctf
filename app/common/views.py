@@ -21,3 +21,11 @@ class CommonSystemUserContextMixin(UserContextMixin):
         context["paused"] = Configuration.game_paused()
 
         return context
+
+
+class RankingUserContextMixin(CommonSystemUserContextMixin):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["ranking"] = Configuration.open_ranking()
+
+        return context

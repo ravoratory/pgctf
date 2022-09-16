@@ -6,7 +6,6 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.deconstruct import deconstructible
-
 from quizzes.models import Solved
 
 

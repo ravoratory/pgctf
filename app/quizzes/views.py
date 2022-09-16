@@ -28,7 +28,6 @@ class QuizListView(UserContextMixin, LoginRequiredMixin, UserPassesTestMixin, ge
         return Configuration.game_ongoing() or self.request.user.is_staff
 
     def get_quizzes(self, is_extra=False):
-        raise NotImplementedError
         quizzes = (
             Quiz.objects.filter(is_extra=is_extra)
             .select_related("category")

@@ -1,6 +1,8 @@
+import time
+
 from django.conf import settings
 from django.db import models
-from django.db.models import BooleanField
+from django.db.models import BooleanField, FloatField
 from django.db.models.functions import Cast
 
 
@@ -13,12 +15,12 @@ class Configuration(models.Model):
         return f"{self.field}: {self.value}"
 
     @staticmethod
-    def game_ongoing() -> bool:
+    def quiz_viewable() -> bool:
         return (
-            Configuration.objects.filter(field="game")
-            .annotate(ongoing=Cast("value", output_field=BooleanField()))
+            Configuration.objects.filter(field="quiz_viewable")
+            .annotate(viewable=Cast("value", output_field=BooleanField()))
             .first()
-            .ongoing
+            .viewable
         )
 
     @staticmethod
@@ -29,6 +31,28 @@ class Configuration(models.Model):
             .first()
             .paused
         )
+
+    @staticmethod
+    def game_ongoing() -> bool:
+        start_ts = (
+            Configuration.objects.filter(field="start_ts")
+            .annotate(timestamp=Cast("value", output_field=FloatField()))
+            .first()
+            .timestamp
+        )
+        end_ts = (
+            Configuration.objects.filter(field="end_ts")
+            .annotate(timestamp=Cast("value", output_field=FloatField()))
+            .first()
+            .timestamp
+        )
+
+        if start_ts is None:
+            return False
+        elif end_ts is None:
+            return start_ts <= time.time()
+        else:
+            return start_ts <= time.time() < end_ts
 
     @staticmethod
     def auto_announce() -> bool:
@@ -67,12 +91,12 @@ class Configuration(models.Model):
         )
 
     @staticmethod
-    def open_ranking() -> bool:
+    def ranking_viewable() -> bool:
         return (
-            Configuration.objects.filter(field="open_ranking")
-            .annotate(open_ranking=Cast("value", output_field=BooleanField()))
+            Configuration.objects.filter(field="ranking_viewable")
+            .annotate(ranking_viewable=Cast("value", output_field=BooleanField()))
             .first()
-            .open_ranking
+            .ranking_viewable
         )
 
     @staticmethod

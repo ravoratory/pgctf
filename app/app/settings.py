@@ -205,7 +205,7 @@ class GameConfiguration(NamedTuple):
 
 
 DEFAULT_GAME_CONFIGURATIONS = [
-    GameConfiguration("game", "0", "(bool) 開催中: 1, 停止中: 0"),
+    GameConfiguration("quiz_viewable", "0", "(bool) 問題画面にアクセスできるか"),
     GameConfiguration("game_paused", "0", "(bool) ゲームが一時停止中: 1, 一時停止中でない: 0"),
     GameConfiguration("start_ts", "0", "(timestamp) ゲーム開始時刻"),
     GameConfiguration("end_ts", "0", "(timestamp) ゲーム終了時刻"),
@@ -218,7 +218,7 @@ DEFAULT_GAME_CONFIGURATIONS = [
     GameConfiguration("default_bonus", "0", "(int) 問題のスコアのボーナス値"),
     GameConfiguration("default_penalty", "0", "(int) 問題のスコアのペナルティ値"),
     GameConfiguration("ranking", "1", "(bool) ランキングを更新するか"),
-    GameConfiguration("open_ranking", "1", "(bool) ランキングを公開するか"),
+    GameConfiguration("ranking_viewable", "1", "(bool) ランキングを公開するか"),
     GameConfiguration("ranking_limit", "10", "(int) ランキングの表示上限"),
     GameConfiguration("ragistration", "1", "(bool) プレイヤー登録を許可するか"),
     GameConfiguration("login", "1", "(bool) プレイヤーのログインを許可するか"),
