@@ -34,8 +34,18 @@ class SolvedAdmin(admin.ModelAdmin):
     search_fields = ["quiz__number", "user__username", "solved_at"]
 
 
+class SubmitLogAdmin(admin.ModelAdmin):
+    list_display = ["user", "quiz", "created_at", "correct"]
+    list_filter = [("quiz", RelatedDropdownFilter), ("user", RelatedDropdownFilter)]
+    search_fields = ["quiz__number", "user__username", "submitted_at"]
+
+    def correct(self, obj):
+        return obj.solved is not None
+
+
 admin.site.register(models.Quiz, QuizAdmin)
 admin.site.register(models.QuizCategory)
 admin.site.register(models.QuizFile)
 admin.site.register(models.QuizAppendedUrl)
 admin.site.register(models.Solved, SolvedAdmin)
+admin.site.register(models.SubmitLog, SubmitLogAdmin)

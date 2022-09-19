@@ -205,21 +205,17 @@ class GameConfiguration(NamedTuple):
 
 
 DEFAULT_GAME_CONFIGURATIONS = [
-    GameConfiguration("quiz_viewable", "0", "(bool) 問題画面にアクセスできるか"),
-    GameConfiguration("game_paused", "0", "(bool) ゲームが一時停止中: 1, 一時停止中でない: 0"),
+    GameConfiguration("quiz_viewable", "0", "(bool) CTF開催期間外でも問題画面にアクセスできるか"),
+    GameConfiguration("game_paused", "0", "(bool) CTF中断用 問題画面へのアクセスは可能"),
     GameConfiguration("start_ts", "0", "(timestamp) ゲーム開始時刻"),
     GameConfiguration("end_ts", "0", "(timestamp) ゲーム終了時刻"),
     GameConfiguration("auto_announce", "1", "(bool) 問題公開アナウンスを自動作成するか"),
-    GameConfiguration("scoring", "1", "(bool) プレイヤーのスコアを加算するか"),
-    GameConfiguration("update_score", "1", "(bool) 回答者の割合によって問題のスコアを更新するか"),
     GameConfiguration("min_score", "50", "(int) 問題のスコアの最小値"),
     GameConfiguration("max_score", "500", "(int) 問題のスコアの最大値"),
     GameConfiguration("winners_threshould", "10", "(int) 超えるとスコアが最小になる正解者数"),
-    GameConfiguration("default_bonus", "0", "(int) 問題のスコアのボーナス値"),
-    GameConfiguration("default_penalty", "0", "(int) 問題のスコアのペナルティ値"),
-    GameConfiguration("ranking", "1", "(bool) ランキングを更新するか"),
+    GameConfiguration("update_score", "1", "(bool) 回答者の割合によって問題のスコアを更新するか"),
+    GameConfiguration("ranking", "1", "(bool) ranking_freeze_tsに関わらずランキングを更新するか"),
+    GameConfiguration("ranking_freeze_ts", "0", "(timestamp) ランキング更新を停止する時刻 0: 常に更新"),
     GameConfiguration("ranking_viewable", "1", "(bool) ランキングを公開するか"),
     GameConfiguration("ranking_limit", "10", "(int) ランキングの表示上限"),
-    GameConfiguration("ragistration", "1", "(bool) プレイヤー登録を許可するか"),
-    GameConfiguration("login", "1", "(bool) プレイヤーのログインを許可するか"),
 ]

@@ -9,6 +9,9 @@ from users.models import User
 
 
 def recalculate_quiz_score(quiz_id=None):
+    if not Configuration.update_score():
+        return
+
     min_score = Configuration.min_score()
     max_score = Configuration.max_score()
     winners_threshould = Configuration.winners_threshould()
@@ -36,6 +39,6 @@ def solved_post_delete_callback(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=Configuration)
-def score_changed_callback(sender, instance, **kwargs):
-    if instance.field in ("min_score", "max_score", "winners_threshould"):
+def score_changed_callback(sender, instance, created, **kwargs):
+    if instance.field in ("min_score", "max_score", "winners_threshould") and not created:
         recalculate_quiz_score()

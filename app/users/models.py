@@ -6,6 +6,8 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.deconstruct import deconstructible
+
+from configurations.models import Configuration
 from quizzes.models import Solved
 
 
@@ -90,4 +92,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def total_score(self):
         score = Solved.objects.filter(user=self, quiz__published=True).aggregate(points=Sum("quiz__point"))["points"]
+        return score or 0
+
+    # ランキングが凍結されていれば凍結直前のスコアを返す
+    def ranking_score(self):
+        enable, freeze_time = Configuration.enable_ranking()
+        if enable:
+            return self.total_score()
+
+        score = Solved.objects.filter(user=self, solved_at_lt=freeze_time, quiz__published=True).aggregate(
+            points=Sum("quiz__point")
+        )["points"]
         return score or 0

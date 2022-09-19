@@ -4,6 +4,8 @@
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% sass_src 'sites/home.scss' %}">
 
+{% include "components/status.html" with ongoing=ongoing paused=paused %}
+
 <main>
     <div class="lp">
         <h1>PG-CTF</h1>

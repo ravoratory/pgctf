@@ -1,50 +1,72 @@
 import json
-from datetime import datetime
+
+import pytz
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Case, F, Max, Sum, When
+from django.db.models import Case, F, Max, NullBooleanField, Prefetch, Sum, When
 from django.db.models.expressions import Window
-from django.db.models.functions import Rank
+from django.db.models.functions import Cast, Rank
+from django.http import HttpRequest
 from django.http.response import HttpResponse
 from django.views.decorators.http import require_GET
 from django.views.generic import ListView
 
-from common.views import UserContextMixin
+from common.views import RankingViewableUserContextTestMixin
+from configurations.models import Configuration
 from quizzes.models import Solved
 from users.models import User
 
 
-class RankingView(UserContextMixin, LoginRequiredMixin, ListView):
+class RankingView(RankingViewableUserContextTestMixin, LoginRequiredMixin, ListView):
     template_name = "sites/ranking.html"
     context_object_name = "ranking"
 
     def get_queryset(self):
+        enable, freeze_datetime = Configuration.enable_ranking()
+
+        ranking = User.objects.filter(is_active=True, is_staff=False).prefetch_related("solved")
+
+        if enable:
+            ranking = ranking.annotate(points=Sum("solved__quiz__point")).annotate(last_solve=Max("solved__solved_at"))
+        else:
+            ranking = ranking.annotate(
+                points=Sum(Case(When(solved__solved_at__lt=freeze_datetime, then="solved__quiz__point")))
+            ).annotate(last_solve=Cast(None, output_field=NullBooleanField()))
+
         return (
-            User.objects.filter(is_active=True, is_staff=False)
-            .prefetch_related("solved")
-            .annotate(points=Sum(Case(When(solved__solved_at__lt=datetime(2022, 9, 10), then="solved__quiz__point"))))
-            .annotate(
+            ranking.annotate(
                 rank=Window(
                     expression=Rank(),
                     order_by=F("points").desc(nulls_last=True),
                 )
             )
-            .annotate(last_solve=Max("solved__solved_at"))
             .values("rank", "username", "points", "last_solve")
             .order_by("rank", "last_solve")
         )
 
 
 @require_GET
-def ranking_chart(request, *args, **kwargs):
+def ranking_chart(request: HttpRequest, *args, **kwargs):
+    if not Configuration.ranking_viewable() and not request.user.is_staff:
+        return HttpResponse(status=403)
+
+    enable, freeze_datetime = Configuration.enable_ranking()
     limit = request.GET.get("limit", 10)
 
+    ranking = User.objects.filter(is_active=True, is_staff=False)
+    if enable:
+        ranking = ranking.prefetch_related("solved")
+    else:
+        ranking = ranking.prefetch_related(
+            Prefetch(
+                "solved",
+                queryset=Solved.objects.filter(solved_at__lt=freeze_datetime),
+                to_attr="solved",
+            )
+        )
     ranking = (
-        User.objects.filter(is_active=True, is_staff=False)
-        .prefetch_related("solved")
-        .filter(solved__solved_at__lt=datetime(2022, 9, 10))
-        .annotate(points=Sum("solved__quiz__point"))
+        ranking.annotate(points=Sum("solved__quiz__point"))
         .annotate(
             rank=Window(
                 expression=Rank(),
@@ -55,9 +77,11 @@ def ranking_chart(request, *args, **kwargs):
         .order_by("rank", "last_solve")
         .values("id")
     )[:limit]
+    solved = Solved.objects.filter(user__in=ranking)
+    if not enable:
+        solved = solved.filter(solved_at__lt=freeze_datetime)
     solved = (
-        Solved.objects.filter(user__in=ranking)
-        .annotate(date_joined=F("user__date_joined"))
+        solved.annotate(date_joined=F("user__date_joined"))
         .annotate(username=F("user__username"))
         .annotate(point=F("quiz__point"))
         .values("username", "point", "solved_at", "date_joined")
@@ -71,7 +95,7 @@ def ranking_chart(request, *args, **kwargs):
             users[record["username"]] = []
             times.append(
                 {
-                    "time": record["date_joined"],
+                    "time": record["date_joined"].astimezone(pytz.timezone("Asia/Tokyo")),
                     "username": record["username"],
                     "point": 0,
                 }
@@ -83,7 +107,7 @@ def ranking_chart(request, *args, **kwargs):
 
         times.append(
             {
-                "time": record["solved_at"],
+                "time": record["solved_at"].astimezone(pytz.timezone("Asia/Tokyo")),
                 "username": record["username"],
                 "point": record["point"] + point,
             }
@@ -100,4 +124,5 @@ def ranking_chart(request, *args, **kwargs):
                 response["points"][u].append("NaN")
 
     response = json.dumps(response, cls=DjangoJSONEncoder)
+
     return HttpResponse(response, content_type="application/json")

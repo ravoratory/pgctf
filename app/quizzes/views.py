@@ -1,5 +1,3 @@
-from typing import Optional
-
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count, F, Q
 from django.db.models.expressions import Window
@@ -8,8 +6,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views import generic
 
-from common.views import UserContextMixin
-from configurations.models import Configuration
+from common.views import QuizViewableUserContextTestMixin
 
 from .forms import CheckFlagForm
 from .models import Quiz, QuizAppendedUrl, QuizFile, Solved, SubmitLog
@@ -18,14 +15,11 @@ QUIZ_STATUS_COLLECT = 1
 QUIZ_STATUS_INVALID = 2
 
 
-class QuizListView(UserContextMixin, LoginRequiredMixin, UserPassesTestMixin, generic.ListView):
+class QuizListView(QuizViewableUserContextTestMixin, LoginRequiredMixin, generic.ListView):
     model = Quiz
     template_name = "quizzes/quizzes.html"
     context_object_name = "quizzes"
     raise_exception = True
-
-    def test_func(self) -> Optional[bool]:
-        return Configuration.game_ongoing() or self.request.user.is_staff
 
     def get_quizzes(self, is_extra=False):
         quizzes = (
@@ -53,12 +47,9 @@ class QuizListView(UserContextMixin, LoginRequiredMixin, UserPassesTestMixin, ge
         return context
 
 
-class QuizView(UserContextMixin, LoginRequiredMixin, UserPassesTestMixin, generic.FormView):
+class QuizView(QuizViewableUserContextTestMixin, LoginRequiredMixin, UserPassesTestMixin, generic.FormView):
     template_name = "quizzes/quiz.html"
     form_class = CheckFlagForm
-
-    def test_func(self):
-        return Configuration.game_ongoing() or self.request.user.is_staff
 
     def get_success_url(self) -> str:
         return self.request.path

@@ -1,9 +1,11 @@
 import time
+from datetime import datetime
 
 from django.conf import settings
 from django.db import models
 from django.db.models import BooleanField, FloatField
 from django.db.models.functions import Cast
+from django.utils import timezone
 
 
 class Configuration(models.Model):
@@ -11,8 +13,18 @@ class Configuration(models.Model):
     value = models.CharField(max_length=100, default="0")
     description = models.TextField()
 
+    created_at = models.DateTimeField(default=timezone.now, editable=False)
+    updated_at = models.DateTimeField(default=timezone.now)
+
     def __str__(self):
         return f"{self.field}: {self.value}"
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.created_at = timezone.now()
+        self.updated_at = timezone.now()
+
+        return super().save(*args, **kwargs)
 
     @staticmethod
     def quiz_viewable() -> bool:
@@ -47,9 +59,9 @@ class Configuration(models.Model):
             .timestamp
         )
 
-        if start_ts is None:
+        if start_ts == 0.0:
             return False
-        elif end_ts is None:
+        elif end_ts == 0.0:
             return start_ts <= time.time()
         else:
             return start_ts <= time.time() < end_ts
@@ -65,12 +77,13 @@ class Configuration(models.Model):
 
     @staticmethod
     def scoring() -> bool:
-        return (
+        scoreing = (
             Configuration.objects.filter(field="scoring")
             .annotate(scoring=Cast("value", output_field=BooleanField()))
             .first()
-            .scoring
         )
+
+        return scoreing.scoreing, scoreing.updated_at
 
     @staticmethod
     def update_score() -> bool:
@@ -83,12 +96,22 @@ class Configuration(models.Model):
 
     @staticmethod
     def enable_ranking() -> bool:
-        return (
+        ranking = (
             Configuration.objects.filter(field="ranking")
             .annotate(ranking=Cast("value", output_field=BooleanField()))
             .first()
-            .ranking
         )
+        freeze_ts = (
+            Configuration.objects.filter(field="ranking_freeze_ts")
+            .annotate(freeze_ts=Cast("value", output_field=FloatField()))
+            .first()
+            .freeze_ts
+        )
+
+        if freeze_ts == 0.0:
+            return True, ranking.updated_at
+        else:
+            return ranking.ranking or time.time() < freeze_ts, datetime.fromtimestamp(freeze_ts)
 
     @staticmethod
     def ranking_viewable() -> bool:
@@ -97,6 +120,15 @@ class Configuration(models.Model):
             .annotate(ranking_viewable=Cast("value", output_field=BooleanField()))
             .first()
             .ranking_viewable
+        )
+
+    @staticmethod
+    def ranking_limit() -> int:
+        return (
+            Configuration.objects.filter(field="ranking_limit")
+            .annotate(ranking_limit=Cast("value", output_field=models.IntegerField()))
+            .first()
+            .ranking_limit
         )
 
     @staticmethod
@@ -146,8 +178,13 @@ class Configuration(models.Model):
 
 
 def create_default_configuration(sender, **kwargs):
+    print("Creating default configuration")
     for field, value, description in settings.DEFAULT_GAME_CONFIGURATIONS:
+        print(f"  Creating {field} with value {value}")
         try:
-            Configuration.objects.get_or_create(field=field, value=value, description=description)
+            _, created = Configuration.objects.get_or_create(field=field, value=value, description=description)
+            print(f"  | {'created' if created else 'already exists'}")
         except Exception:
-            pass
+            print("  | pass")
+
+    print("Done creating default configuration")
