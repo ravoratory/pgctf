@@ -16,20 +16,19 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
-
+from django.urls import include, path
 
 urlpatterns = [
-    path('', include('sites.urls', namespace='sites')),
-    path('', include('users.urls', namespace='users')),
-    path('', include('problems.urls', namespace='problems')),
-    path('admin/', admin.site.urls),
-    path('problems/', include('quizzes.urls', namespace='quizzes')),
-    path('announce/', include('announcements.urls', namespace='announcements')),
+    path("", include("sites.urls", namespace="sites")),
+    path("", include("users.urls", namespace="users")),
+    path("", include("problems.urls", namespace="problems")),
+    path("admin/", admin.site.urls),
+    path("problems/", include("quizzes.urls", namespace="quizzes")),
+    path("announce/", include("announcements.urls", namespace="announcements")),
     # path('signup/', views.SignUpView.as_view(), name='signup'),
     # path('signin/', views.SignInView.as_view(), name='signin'),
     # path('signout/', auth_view.LogoutView.as_view(), name='signout'),
-    path('community/', include('allauth.urls'))
+    path("community/", include("allauth.urls")),
 ]
 
 if settings.DEBUG:

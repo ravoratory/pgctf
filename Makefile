@@ -1,41 +1,47 @@
 SHELL = /bin/sh
-COMPOSE_LOCAL := docker-compose.local.yml
-compose = docker-compose -f $(COMPOSE_LOCAL)
 
-.PHONY: loc
-loc: build-loc
-	$(compose) up
+.PHONY: setup
+setup:
+	cp example.env .env
 
-.PHONY: build-loc
-build-loc:
-	$(compose) build
+.PHONY: up
+up: build
+	docker compose up
+
+.PHONY: build
+build:
+	docker compose build
 
 .PHONY: exec
 exec:
-	$(compose) exec web bash
-
-.PHONY: exec-db
-exec-db:
-	$(compose) exec db bash
+	docker compose exec web bash
 
 .PHONY: down
 down:
-	$(compose) down
+	docker compose down
 
 .PHONY: cleanup
 clean:
 	-docker $(RM) `docker ps -aq`
 	docker system prune -af
 
-user = root
-email = root@example.com
-
-.PHONY: cs
-cs:
-	$(compose) exec web \
-	python manage.py createsuperuser --username $(user) --email $(email)
+.PHONY: createsuperuser
+createsuperuser:
+	docker compose exec web \
+	python manage.py createsuperuser --noinput
 
 .PHONY: db
 db:
-	$(compose) exec db \
+	docker compose exec db \
 	psql -h 127.0.0.1 -p 5432 -U pg -W postgres
+
+.PHONY: lint
+check:
+	python -m flake8 app
+	python -m black --check app
+	python -m isort --check app
+
+.PHONY: format
+format:
+	python -m black app
+	python -m isort app

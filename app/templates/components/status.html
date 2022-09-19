@@ -1,0 +1,7 @@
+{% if not ongoing or paused %}
+<nav class="game-status">
+    <div class="container">
+        {{ ongoing|yesno:'メンテナンス中です,CTF開催期間外です' }}
+    </div>
+</nav>
+{% endif %}

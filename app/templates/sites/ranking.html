@@ -11,6 +11,9 @@
 {% endblock %}
 
 {% block content %}
+
+{% include "components/ranking_status.html" with ongoing=ongoing paused=paused %}
+
 <main>
     <div class="page-title">
         <h1>Ranking</h1>

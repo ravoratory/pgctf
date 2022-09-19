@@ -62,3 +62,14 @@ body {
         }
     }
 }
+
+.game-status {
+    background-color: #ffb6c1;
+    border: 2px solid #f08080;
+    border-radius: .5rem;
+    .container {
+        display: flex;
+        justify-content: center;
+        padding: 1rem;
+    }
+}

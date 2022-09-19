@@ -1,0 +1,7 @@
+{% if not enable_ranking %}
+<nav class="game-status">
+    <div class="container">
+        ランキングは{{ freeze_time|date:"Y-n-j H:i:s" }}に凍結されました<br>
+    </div>
+</nav>
+{% endif %}

@@ -4,6 +4,8 @@
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% sass_src 'sites/home.scss' %}">
 
+{% include "components/status.html" with ongoing=ongoing paused=paused %}
+
 <main>
     <div class="lp">
         <h1>PG-CTF</h1>
@@ -27,8 +29,8 @@
             </tr>
             {% for quiz in quizzes %}
             <tr>
-                <td>{{ quiz.quiz_number }}</td>
-                <td><a href="{% url 'quizzes:quiz' quiz.quiz_number %}">{{ quiz.title }}</a> {% if quiz.published == False %}[Draft]{% endif %}</td>
+                <td>{{ quiz.number }}</td>
+                <td><a href="{% url 'quizzes:quiz' quiz.number %}">{{ quiz.title }}</a> {% if quiz.published == False %}[Draft]{% endif %}</td>
                 <td>{{ quiz.category | default:" " }}</td>
                 <td>{{ quiz.difficulty }}</td>
                 <td>{{ quiz.point }}</td>
@@ -54,8 +56,8 @@
             </tr>
             {% for quiz in extra_quizzes %}
             <tr>
-                <td>{{ quiz.quiz_number }}</td>
-                <td><a href="{% url 'quizzes:quiz' quiz.quiz_number %}">{{ quiz.title }}</a> {% if quiz.published == False %}[Draft]{% endif %}</td>
+                <td>{{ quiz.number }}</td>
+                <td><a href="{% url 'quizzes:quiz' quiz.number %}">{{ quiz.title }}</a> {% if quiz.published == False %}[Draft]{% endif %}</td>
                 <td>{{ quiz.category | default:" " }}</td>
                 <td>{{ quiz.difficulty }}</td>
                 <td>{{ quiz.point }}</td>
